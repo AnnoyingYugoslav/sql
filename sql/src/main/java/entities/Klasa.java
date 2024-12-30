@@ -1,18 +1,19 @@
 package entities;
+
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "sala")
-public class Sala {
+@Table(name = "klasa")
+public class Klasa {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nr_sali", nullable = false, length = 10)
+    @Column(name = "nazwa", nullable = false, length = 50)
     private String nazwa;
 
-    public Sala(Long id, String nazwa) {
-        this.id = id;
+    public Klasa(String nazwa) {
         this.nazwa = nazwa;
     }
 
@@ -34,9 +35,9 @@ public class Sala {
 
     @Override
     public String toString() {
-        return "Sala{" +
+        return "Klasa{" +
                 "id=" + id +
-                ", nazwa=" + nazwa +
+                ", nazwa='" + nazwa + '\'' +
                 '}';
     }
 }

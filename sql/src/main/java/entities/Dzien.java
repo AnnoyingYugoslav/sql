@@ -36,9 +36,6 @@ public class Dzien {
     }
 
 
-    public Dzien() {
-    }
-
     public Dzien(LocalDate data) {
         this.data = data;
     }
