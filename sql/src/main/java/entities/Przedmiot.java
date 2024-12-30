@@ -50,8 +50,6 @@ public class Przedmiot {
         this.nauczyciel = nauczyciel;
     }
 
-    // toString method
-
     @Override
     public String toString() {
         return "Przedmiot{" +

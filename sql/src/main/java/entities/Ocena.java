@@ -31,8 +31,6 @@ public class Ocena {
     @JoinColumn(name = "id_przedmiotu", nullable = false)
     private Przedmiot przedmiot;
 
-    // Getters and Setters
-
     public Long getId() {
         return id;
     }
@@ -88,7 +86,6 @@ public class Ocena {
         this.nauczyciel = nauczyciel;
         this.przedmiot = przedmiot;
     }
-
 
     @Override
     public String toString() {

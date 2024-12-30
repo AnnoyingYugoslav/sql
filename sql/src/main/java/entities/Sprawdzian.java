@@ -85,8 +85,6 @@ public class Sprawdzian {
         this.przedmiot = przedmiot;
     }
 
-    // toString method
-
     @Override
     public String toString() {
         return "Sprawdzian{" +
