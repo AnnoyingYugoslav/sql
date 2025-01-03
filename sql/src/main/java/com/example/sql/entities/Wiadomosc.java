@@ -1,8 +1,6 @@
-package entities;
+package com.example.sql.entities;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "wiadomosc")
 public class Wiadomosc {
@@ -17,17 +15,18 @@ public class Wiadomosc {
     @Column(name = "tresc", nullable = false, columnDefinition = "TEXT")
     private String tresc;
 
-    @Column(name = "data", nullable = false)
-    private LocalDateTime data;
+    @ManyToOne
+    @JoinColumn(name = "data", nullable = false)
+    private Dzien dzien;
 
     @Lob //LOB czy BLOB ?
     @Column(name = "zalaczniki")
     private byte[] zalaczniki;
 
-    public Wiadomosc(String tytul, String tresc, LocalDateTime data, byte[] zalaczniki) {
+    public Wiadomosc(String tytul, String tresc, Dzien data, byte[] zalaczniki) {
         this.tytul = tytul;
         this.tresc = tresc;
-        this.data = data;
+        this.dzien = data;
         this.zalaczniki = zalaczniki;
     }
 
@@ -55,13 +54,6 @@ public class Wiadomosc {
         this.tresc = tresc;
     }
 
-    public LocalDateTime getData() {
-        return data;
-    }
-
-    public void setData(LocalDateTime data) {
-        this.data = data;
-    }
 
     public byte[] getZalaczniki() {
         return zalaczniki;
@@ -77,7 +69,7 @@ public class Wiadomosc {
                 "id=" + id +
                 ", tytul='" + tytul + '\'' +
                 ", tresc='" + tresc + '\'' +
-                ", data=" + data +
+                ", data=" + dzien +
                 '}';
     }
 }

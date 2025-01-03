@@ -1,4 +1,4 @@
-package entities;
+package com.example.sql.entities;
 
 import jakarta.persistence.*;
 import java.time.LocalTime;
@@ -18,7 +18,8 @@ public class Lekcja {
     @Column(name = "end", nullable = false)
     private LocalTime end;
 
-    @Column(name = "dzien", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "dzien", nullable = false)
     private Dzien dzien;
 
     @ManyToOne

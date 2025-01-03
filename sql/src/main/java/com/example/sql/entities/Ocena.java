@@ -1,8 +1,6 @@
-package entities;
+package com.example.sql.entities;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 
 @Entity
@@ -16,8 +14,9 @@ public class Ocena {
     @Column(name = "ocena", nullable = false)
     private Integer ocena;
 
-    @Column(name = "data", nullable = false)
-    private LocalDate data;
+    @ManyToOne
+    @JoinColumn(name = "data", nullable = false)
+    private Dzien dzien;
 
     @ManyToOne
     @JoinColumn(name = "id_ucznia", nullable = false)
@@ -46,15 +45,6 @@ public class Ocena {
     public void setOcena(Integer ocena) {
         this.ocena = ocena;
     }
-
-    public LocalDate getData() {
-        return data;
-    }
-
-    public void setData(LocalDate data) {
-        this.data = data;
-    }
-
     public UserUczen getUczen() {
         return uczen;
     }
@@ -79,9 +69,9 @@ public class Ocena {
         this.przedmiot = przedmiot;
     }
 
-    public Ocena(Integer ocena, LocalDate data, UserUczen uczen, UserNauczyciel nauczyciel, Przedmiot przedmiot) {
+    public Ocena(Integer ocena, Dzien data, UserUczen uczen, UserNauczyciel nauczyciel, Przedmiot przedmiot) {
         this.ocena = ocena;
-        this.data = data;
+        this.dzien = data;
         this.uczen = uczen;
         this.nauczyciel = nauczyciel;
         this.przedmiot = przedmiot;
@@ -92,7 +82,7 @@ public class Ocena {
         return "Ocena{" +
                 "id=" + id +
                 ", ocena=" + ocena +
-                ", data=" + data +
+                ", data=" + dzien +
                 ", uczen=" + uczen +
                 ", nauczyciel=" + nauczyciel +
                 ", przedmiot=" + przedmiot +

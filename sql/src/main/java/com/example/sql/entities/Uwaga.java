@@ -1,8 +1,6 @@
-package entities;
+package com.example.sql.entities;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "uwaga")
@@ -15,8 +13,9 @@ public class Uwaga {
     @Column(name = "tresc", nullable = false, columnDefinition = "TEXT")
     private String tresc;
 
-    @Column(name = "data", nullable = false)
-    private LocalDateTime data;
+    @ManyToOne
+    @JoinColumn(name = "data", nullable = false)
+    private Dzien dzien;
 
     @ManyToOne
     @JoinColumn(name = "id_ucznia", nullable = false)
@@ -42,14 +41,6 @@ public class Uwaga {
         this.tresc = tresc;
     }
 
-    public LocalDateTime getData() {
-        return data;
-    }
-
-    public void setData(LocalDateTime data) {
-        this.data = data;
-    }
-
     public UserUczen getUczen() {
         return uczen;
     }
@@ -66,9 +57,9 @@ public class Uwaga {
         this.nauczyciel = nauczyciel;
     }
 
-    public Uwaga(String tresc, LocalDateTime data, UserUczen uczen, UserNauczyciel nauczyciel) {
+    public Uwaga(String tresc, Dzien data, UserUczen uczen, UserNauczyciel nauczyciel) {
         this.tresc = tresc;
-        this.data = data;
+        this.dzien = data;
         this.uczen = uczen;
         this.nauczyciel = nauczyciel;
     }
@@ -78,7 +69,7 @@ public class Uwaga {
         return "Uwaga{" +
                 "id=" + id +
                 ", tresc='" + tresc + '\'' +
-                ", data=" + data +
+                ", data=" + dzien +
                 ", uczen=" + uczen +
                 ", nauczyciel=" + nauczyciel +
                 '}';

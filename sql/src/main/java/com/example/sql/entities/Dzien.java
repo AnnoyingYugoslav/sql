@@ -1,4 +1,4 @@
-package entities;
+package com.example.sql.entities;
 
 import java.time.LocalDate;
 
@@ -25,19 +25,6 @@ public class Dzien {
     }
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public LocalDate getData() {
-        return data;
-    }
-
-    public void setData(LocalDate data) {
-        this.data = data;
-    }
-
-
-    public Dzien(LocalDate data) {
-        this.data = data;
     }
 
     @Override

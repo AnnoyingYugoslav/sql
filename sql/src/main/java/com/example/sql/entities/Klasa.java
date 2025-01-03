@@ -1,4 +1,4 @@
-package entities;
+package com.example.sql.entities;
 
 import jakarta.persistence.*;
 

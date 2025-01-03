@@ -3,7 +3,7 @@ package com.example.sql;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = { "com.example.controller" })
+@SpringBootApplication(scanBasePackages = { "com.example.controller", "com.example.sql.repositories" })
 public class SqlApplication {
 
 	public static void main(String[] args) {

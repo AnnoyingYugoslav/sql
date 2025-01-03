@@ -1,10 +1,10 @@
-package entities;
+package com.example.sql.entities;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "user_uczen")
-public class UserUczen {
+@Table(name = "user_nau")
+public class UserNauczyciel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,16 +22,11 @@ public class UserUczen {
     @Column(name = "email", length = 100)
     private String email;
 
-    @ManyToOne
-    @JoinColumn(name = "id_klasy", nullable = false)
-    private Klasa klasa;
-
-    public UserUczen(String imie, String imie2, String nazwisko, String email, Klasa klasa) {
+    public UserNauczyciel(String imie, String imie2, String nazwisko, String email) {
         this.imie = imie;
         this.imie2 = imie2;
         this.nazwisko = nazwisko;
         this.email = email;
-        this.klasa = klasa;
     }
 
     public Long getId() {
@@ -74,23 +69,14 @@ public class UserUczen {
         this.email = email;
     }
 
-    public Klasa getKlasa() {
-        return klasa;
-    }
-
-    public void setKlasa(Klasa klasa) {
-        this.klasa = klasa;
-    }
-
     @Override
     public String toString() {
-        return "UserUczen{" +
+        return "UserNauczyciel{" +
                 "id=" + id +
                 ", imie='" + imie + '\'' +
                 ", imie2='" + imie2 + '\'' +
                 ", nazwisko='" + nazwisko + '\'' +
                 ", email='" + email + '\'' +
-                ", klasa=" + klasa +
                 '}';
     }
 }

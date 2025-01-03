@@ -1,10 +1,10 @@
-package entities;
+package com.example.sql.entities;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "wiadomosc_n")
-public class WiadomoscN {
+@Table(name = "wiadomosc_u")
+public class WiadomoscU {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,9 +16,9 @@ public class WiadomoscN {
 
     @ManyToOne
     @JoinColumn(name = "id_odbiorcy", nullable = false)
-    private UserNauczyciel odbiorca;
+    private UserUczen odbiorca;
 
-    public WiadomoscN(Wiadomosc wiadomosc, UserNauczyciel odbiorca) {
+    public WiadomoscU(Wiadomosc wiadomosc, UserUczen odbiorca) {
         this.wiadomosc = wiadomosc;
         this.odbiorca = odbiorca;
     }
@@ -39,11 +39,11 @@ public class WiadomoscN {
         this.wiadomosc = wiadomosc;
     }
 
-    public UserNauczyciel getOdbiorca() {
+    public UserUczen getOdbiorca() {
         return odbiorca;
     }
 
-    public void setOdbiorca(UserNauczyciel odbiorca) {
+    public void setOdbiorca(UserUczen odbiorca) {
         this.odbiorca = odbiorca;
     }
 
