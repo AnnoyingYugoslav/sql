@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.sql.entities.Klasa;
-import com.example.sql.repositories.Repositories.*;
+import com.example.sql.repositories.*;
 
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -17,7 +17,6 @@ public class ApiController {
 
     private final KlasaRepository klasaRepository;
 
-    @Autowired
     public ApiController(KlasaRepository klasaRepository) {
         this.klasaRepository = klasaRepository;
     }
