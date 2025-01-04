@@ -336,8 +336,6 @@ public class ApiController {
         }
     }
         
-
-
     @GetMapping("/get-uczniowie")
     public String getMUczniowieKlasy(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password 3: Id klasy -> 1:true false, rest... GOOD LUCK
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -376,4 +374,43 @@ public class ApiController {
         }
     }
     
+
+    @PostMapping("/change-password")
+    public String postMethodName(@RequestBody Map<Integer, Object> newMapData) { //1: logn 2: password 3: new password -> 1:true
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            String password3 = newMapData.get(3).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Integer i = account.changePassowrd(login, password, password3);
+            if(i == 1){
+                i = account.changeStartPassowrd(login, password, password3); //makes to possible to start out with an easy passowrd
+                if(i == 1){
+                    toReturn.put(1, false);
+                    return convertMapToJson(toReturn);
+                }
+            }
+            toReturn.put(1, true);
+            return convertMapToJson(toReturn);
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+        }
+    }
+    
+    public String putMethodName(@PathVariable String id, @RequestBody String entity) {
+        //TODO: process PUT request
+        
+        return entity;
+    }
 }
