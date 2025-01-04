@@ -12,10 +12,10 @@ public class Lekcja {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "start", nullable = false)
+    @Column(name = "start_time", nullable = false)
     private LocalTime start;
 
-    @Column(name = "end", nullable = false)
+    @Column(name = "end_time", nullable = false)
     private LocalTime end;
 
     @ManyToOne

@@ -16,8 +16,7 @@ public class Ocena {
     @Column(name = "ocena", nullable = false)
     private Integer ocena;
 
-    @ManyToOne
-    @JoinColumn(name = "data", nullable = false)
+    @Column(name = "data", nullable = false)
     private LocalDateTime dzien;
 
     @ManyToOne
