@@ -28,13 +28,18 @@ public class Sprawdzian {
     @JoinColumn(name = "id_przedmiotu", nullable = false)
     private Przedmiot przedmiot;
 
+    @ManyToOne
+    @JoinColumn(name = "dzien", nullable = false)
+    private Dzien dzien;
 
-    public Sprawdzian(String kategoria, UserNauczyciel nauczyciel, Sala sala, Klasa klasa, Przedmiot przedmiot) {
+
+    public Sprawdzian(String kategoria, UserNauczyciel nauczyciel, Sala sala, Klasa klasa, Przedmiot przedmiot, Dzien dzien) {
         this.kategoria = kategoria;
         this.nauczyciel = nauczyciel;
         this.sala = sala;
         this.klasa = klasa;
         this.przedmiot = przedmiot;
+        this.dzien = dzien;
     }
 
     public Long getId() {
@@ -68,7 +73,14 @@ public class Sprawdzian {
     public void setSala(Sala sala) {
         this.sala = sala;
     }
+    public void setDzien(Dzien dzien){
+        this.dzien = dzien;
+    }
 
+    public Dzien getDzien(){
+        return dzien;
+    }
+    
     public Klasa getKlasa() {
         return klasa;
     }
@@ -84,6 +96,7 @@ public class Sprawdzian {
     public void setPrzedmiot(Przedmiot przedmiot) {
         this.przedmiot = przedmiot;
     }
+
 
     @Override
     public String toString() {

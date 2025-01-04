@@ -20,6 +20,10 @@ public class Dzien {
     @Column(name = "data", nullable = false)
     private LocalDate data;
 
+    public Dzien(LocalDate data) {
+        this.data = data;
+    }
+
     public Long getId() {
         return id;
     }

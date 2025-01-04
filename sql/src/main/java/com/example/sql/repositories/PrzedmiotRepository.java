@@ -24,4 +24,5 @@ import com.example.sql.entities.WiadomoscU;
 
     @Repository
     public interface PrzedmiotRepository extends JpaRepository<Przedmiot, Long> {
+        Przedmiot getReferenceByNazwa(String nazwa);
     }

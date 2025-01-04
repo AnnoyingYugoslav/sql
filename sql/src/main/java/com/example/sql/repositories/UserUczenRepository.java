@@ -1,5 +1,7 @@
 package com.example.sql.repositories;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -25,4 +27,5 @@ import com.example.sql.entities.WiadomoscU;
 
     @Repository
     public interface UserUczenRepository extends JpaRepository<UserUczen, Long> {
+        List<UserUczen> findByKlasa(Klasa klasa);
     }

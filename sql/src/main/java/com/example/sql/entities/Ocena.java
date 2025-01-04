@@ -1,5 +1,7 @@
 package com.example.sql.entities;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 
 
@@ -16,7 +18,7 @@ public class Ocena {
 
     @ManyToOne
     @JoinColumn(name = "data", nullable = false)
-    private Dzien dzien;
+    private LocalDateTime dzien;
 
     @ManyToOne
     @JoinColumn(name = "id_ucznia", nullable = false)
@@ -69,7 +71,7 @@ public class Ocena {
         this.przedmiot = przedmiot;
     }
 
-    public Ocena(Integer ocena, Dzien data, UserUczen uczen, UserNauczyciel nauczyciel, Przedmiot przedmiot) {
+    public Ocena(Integer ocena, LocalDateTime data, UserUczen uczen, UserNauczyciel nauczyciel, Przedmiot przedmiot) {
         this.ocena = ocena;
         this.dzien = data;
         this.uczen = uczen;
