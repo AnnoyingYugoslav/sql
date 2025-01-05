@@ -1140,7 +1140,7 @@ public class ApiController {
             return convertMapToJson(toReturn);
         }
     }
-
+    
     @GetMapping("/get-lekcja-uczen")
     public String getLekcjaUczen(@RequestBody Map<Integer, Object> newMapData) { //the same
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -1175,4 +1175,90 @@ public class ApiController {
         }
     }
     
+    @GetMapping("/get-lekcja-rodzic/{id}")
+    public String getLekcjaUczen(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) {
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserRodzic() == null){ //not a uczen
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            UserUczen userUczen = userUczenRepository.getReferenceById(id);
+            if(!(userUczen instanceof UserUczen)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Relacja relacja = relacjaRepository.findAllByField1AndField2(userUczen, account.getUserRodzic());
+            if(!(relacja instanceof Relacja)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            List<Lekcja> allLekcja = lekcjaRepository.findByKlasa(userUczen.getKlasa());
+            int i = 2;
+            toReturn.put(1, true);
+            for(Lekcja lekcja: allLekcja){
+                toReturn.put(i, lekcja);
+                i++;
+            }
+            return convertMapToJson(toReturn);
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    
+    }
+
+    @GetMapping("/get-lekcja-rodzic/{id}") //id klasy!
+    public String getLekcjaNauczyciel(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) {
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserNauczyciel() == null){ //not a uczen
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Klasa klasa = klasaRepository.getReferenceById(id);
+            if(!(klasa instanceof Klasa)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            List<Lekcja> allLekcja = lekcjaRepository.findByKlasa(klasa);
+            int i = 2;
+            toReturn.put(1, true);
+            for(Lekcja lekcja: allLekcja){
+                toReturn.put(i, lekcja);
+                i++;
+            }
+            return convertMapToJson(toReturn);
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    
+    }
+
 }   
+
