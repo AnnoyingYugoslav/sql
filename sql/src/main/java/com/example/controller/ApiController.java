@@ -48,6 +48,7 @@ public class ApiController {
     private final WiadomoscRRepository wiadomoscRRepository;
     private final WiadomoscURepository wiadomoscURepository;
     private final AccountRepository accountRepository;
+    private final RelacjaRepository relacjaRepository;
 
     public ApiController(KlasaRepository klasaRepository, DzienRepository dzienRepository,
             LekcjaRepository lekcjaRepository, OcenaRepository ocenaRepository, PrzedmiotRepository przedmiotRepository,
@@ -55,7 +56,7 @@ public class ApiController {
             UserNauczycielRepository userNauczycielRepository, UserRodzicRepository userRodzicRepository,
             UserUczenRepository userUczenRepository, UwagaRepository uwagaRepository,
             WiadomoscRepository wiadomoscRepository, WiadomoscNRepository wiadomoscNRepository,
-            WiadomoscRRepository wiadomoscRRepository, WiadomoscURepository wiadomoscURepository, AccountRepository accountRepository) {
+            WiadomoscRRepository wiadomoscRRepository, WiadomoscURepository wiadomoscURepository, AccountRepository accountRepository, RelacjaRepository relacjaRepository) {
         this.klasaRepository = klasaRepository;
         this.dzienRepository = dzienRepository;
         this.lekcjaRepository = lekcjaRepository;
@@ -72,6 +73,7 @@ public class ApiController {
         this.wiadomoscRRepository = wiadomoscRRepository;
         this.wiadomoscURepository = wiadomoscURepository;
         this.accountRepository = accountRepository;
+        this.relacjaRepository = relacjaRepository;
     }
     private String convertMapToJson(Map<Integer, Object> map) {
         try {
@@ -644,7 +646,7 @@ public class ApiController {
     }
     
     @PutMapping("/edit-lekcja/{id}")
-    public String putMethodName(@PathVariable String id, @RequestBody Map<Integer, Object> newMapData) { //1: lgin 2: password 3: id dzien 4: id klasa 5: id sala 6: id nauczyciela 7: time start 8: time end -> true/false
+    public String editLekcja(@PathVariable Long id, @RequestBody Map<Integer, Object> newMapData) { //1: lgin 2: password 3: id dzien 4: id klasa 5: id sala 6: id nauczyciela 7: time start 8: time end -> true/false
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
             String login = newMapData.get(1).toString();
@@ -686,7 +688,14 @@ public class ApiController {
             LocalTime endtTime = LocalTime.parse((String) newMapData.get(8));
 
 
-            Lekcja lekcja = new Lekcja(startTime,endtTime, dzien, klasa, sala, nauczyciel);
+            Lekcja lekcja = lekcjaRepository.getReferenceById(id);
+            lekcja.setDzien(dzien);
+            lekcja.setEnd(endtTime);
+            lekcja.setKlasa(klasa);
+            lekcja.setNauczyciel(nauczyciel);
+            lekcja.setSala(sala);
+            lekcja.setStart(startTime);
+
             Lekcja savedLekcja = lekcjaRepository.save(lekcja);
             if(!(savedLekcja instanceof Lekcja)){
                 toReturn.put(1, false);
@@ -701,4 +710,469 @@ public class ApiController {
         }
     }
 
-}
+    @GetMapping("/get-uwagi-uczen")
+    public String getUwagiUczen(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password -> 1: true, flase 2:- rest
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserUczen() == null){ //not a uczen
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            List<Uwaga> allUwaga = uwagaRepository.findByUczen(account.getUserUczen());
+            int i = 2;
+            toReturn.put(1, true);
+            for(Uwaga uwaga:allUwaga){
+                toReturn.put(i, uwaga);
+                i++;
+            }
+            return convertMapToJson(toReturn);
+
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+    
+    @GetMapping("/get-uwagi-nauczyciel/{id}") //id uczen you want to look at
+    public String getUwagiNau(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) { //1: login 2: password -> 1: true, flase 2:- rest
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserNauczyciel() == null){ //not a nauczycuel
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            UserUczen userUczen = userUczenRepository.getReferenceById(id);
+            if(!(userUczen instanceof UserUczen)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            List<Uwaga> allUwaga = uwagaRepository.findByUczen(userUczen);
+            int i = 2;
+            toReturn.put(1, true);
+            for(Uwaga uwaga:allUwaga){
+                toReturn.put(i, uwaga);
+                i++;
+            }
+            return convertMapToJson(toReturn);
+
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+
+    @GetMapping("/get-uwagi-nauczyciel-all")
+    public String getUwagiNauczycuek(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password -> 1: true, flase 2:- rest
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserNauczyciel() == null){ //not a uczen
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            List<Uwaga> allUwaga = uwagaRepository.findByNauczyciel(account.getUserNauczyciel());
+            int i = 2;
+            toReturn.put(1, true);
+            for(Uwaga uwaga:allUwaga){
+                toReturn.put(i, uwaga);
+                i++;
+            }
+            return convertMapToJson(toReturn);
+
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+
+    @GetMapping("/get-oceny-uczen")
+    public String getOcenyUczen(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password -> 1: true, flase 2:- rest
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserUczen() == null){ //not a uczen
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            List<Ocena> allOcena = ocenaRepository.findByUczen(account.getUserUczen());
+            int i = 2;
+            toReturn.put(1, true);
+            for(Ocena ocena:allOcena){
+                toReturn.put(i, ocena);
+                i++;
+            }
+            return convertMapToJson(toReturn);
+
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+    
+    @GetMapping("/get-oceny-nauczyciel/{id}") //id uczen you want to look at
+    public String getOcenyNau(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) { //1: login 2: password -> 1: true, flase 2:- rest
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserNauczyciel() == null){ //not a nauczycuel
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            UserUczen userUczen = userUczenRepository.getReferenceById(id);
+            if(!(userUczen instanceof UserUczen)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            List<Ocena> allOcena = ocenaRepository.findByUczen(userUczen);
+            int i = 2;
+            toReturn.put(1, true);
+            for(Ocena ocena:allOcena){
+                toReturn.put(i, ocena);
+                i++;
+            }
+            return convertMapToJson(toReturn);
+
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+
+    @GetMapping("/get-sprawdziany-uczen")
+    public String getSprawdzianyUczen(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password -> 1: true, flase 2:- rest
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserUczen() == null){ //not a uczen
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            List<Sprawdzian> allSprawdzian = sprawdzianRepository.findByKlasa(account.getUserUczen().getKlasa());
+            int i = 2;
+            toReturn.put(1, true);
+            for(Sprawdzian sprawdzian: allSprawdzian){
+                toReturn.put(i, sprawdzian);
+                i++;
+            }
+            return convertMapToJson(toReturn);
+
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+    //wiadomości full handling - daj tylko tam, gdzie użytkownik wysłał
+
+    @GetMapping("/get-sprawdzian-nauczyciel/{id}") //id klasa
+    public String getSprawdzianyNau(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) { //1: login 2: password -> 1: true, flase 2:- rest
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserNauczyciel() == null){ //not a nauczycuel
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Klasa klasa = klasaRepository.getReferenceById(id);
+            if(!(klasa instanceof Klasa)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            List<Sprawdzian> allSprawdzian = sprawdzianRepository.findByKlasa(klasa)
+            int i = 2;
+            toReturn.put(1, true);
+            for(Sprawdzian sprawdzian:allSprawdzian){
+                toReturn.put(i, sprawdzian);
+                i++;
+            }
+            return convertMapToJson(toReturn);
+
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+
+    @GetMapping("/get-uczen-rodzica")
+    public String getUczenByRodzic(@RequestBody Map<Integer, Object> newMapData) { //1:login 2: password -> 1: true 2-ile masz dzieci : id dzieci
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserRodzic() == null){ //not a nauczycuel
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            List<Relacja> allRelacja = relacjaRepository.findByUserRodzic(account.getUserRodzic());
+            toReturn.put(1, true);
+            int i = 2;
+            for(Relacja relacja:allRelacja){
+                toReturn.put(i, relacja.getUserUczen());
+                i++;
+            }
+            return convertMapToJson(toReturn);
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+
+    }
+    
+    @GetMapping("/get-sprawdzian-rodzic/{id}") //id ucznia
+    public String getSprawdzianyRodzic(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) { //1: login 2: password -> 1: true, flase 2:- rest
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserRodzic() == null){ //not a rodzic
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            UserUczen userUczen = userUczenRepository.getReferenceById(id);
+            if(!(userUczen instanceof UserUczen)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Relacja relacja = relacjaRepository.findAllByField1AndField2(userUczen, account.getUserRodzic());
+            if(!(relacja instanceof Relacja)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            List<Sprawdzian> allSprawdzian = sprawdzianRepository.findByKlasa(userUczen.getKlasa());
+            int i = 2;
+            toReturn.put(1, true);
+            for(Sprawdzian sprawdzian:allSprawdzian){
+                toReturn.put(i, sprawdzian);
+                i++;
+            }
+            return convertMapToJson(toReturn);
+
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+
+    @GetMapping("/get-uwagi-rodzic/{id}") //id uczen you want to look at
+    public String getUwagiRodzic(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) { //1: login 2: password -> 1: true, flase 2:- rest
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserRodzic() == null){ //not a nauczycuel
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            UserUczen userUczen = userUczenRepository.getReferenceById(id);
+            if(!(userUczen instanceof UserUczen)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Relacja relacja = relacjaRepository.findAllByField1AndField2(userUczen, account.getUserRodzic());
+            if(!(relacja instanceof Relacja)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            List<Uwaga> allUwaga = uwagaRepository.findByUczen(userUczen);
+            int i = 2;
+            toReturn.put(1, true);
+            for(Uwaga uwaga:allUwaga){
+                toReturn.put(i, uwaga);
+                i++;
+            }
+            return convertMapToJson(toReturn);
+
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+
+    @GetMapping("/get-oceny-rodzic/{id}") //id uczen you want to look at
+    public String getOcenyRodzic(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) { //1: login 2: password -> 1: true, flase 2:- rest
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserRodzic() == null){ //not a nauczycuel
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            UserUczen userUczen = userUczenRepository.getReferenceById(id);
+            if(!(userUczen instanceof UserUczen)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Relacja relacja = relacjaRepository.findAllByField1AndField2(userUczen, account.getUserRodzic());
+            if(!(relacja instanceof Relacja)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            List<Ocena> allOcena = ocenaRepository.findByUczen(userUczen);
+            int i = 2;
+            toReturn.put(1, true);
+            for(Ocena ocena:allOcena){
+                toReturn.put(i, ocena);
+                i++;
+            }
+            return convertMapToJson(toReturn);
+
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+
+    @GetMapping("/get-lekcja-uczen")
+    public String getLekcjaUczen(@RequestBody Map<Integer, Object> newMapData) { //the same
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserUczen() == null){ //not a uczen
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            List<Lekcja> allLekcja = lekcjaRepository.findByKlasa(account.getUserUczen().getKlasa());
+            int i = 2;
+            toReturn.put(1, true);
+            for(Lekcja lekcja: allLekcja){
+                toReturn.put(i, lekcja);
+                i++;
+            }
+            return convertMapToJson(toReturn);
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+    
+}   
