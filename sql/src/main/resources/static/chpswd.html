@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zmiana hasła</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Zmień hasło</h1>
+    </header>
+    <main>
+    <form id="myForm">
+        <label for="Password">Stare hasło</label>
+        <input type="password" id="Password" name="Password" required>
+        <label for="Password2">nowe hasło</label>
+        <input type="password" id="Password2" name="Password2" required>
+        <button type="button" onclick="chpswd()">Zmień hasło</button>
+    </form>
+    <button onclick="returnp()">Powrót</button>
+    <div id="info">
+    </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>

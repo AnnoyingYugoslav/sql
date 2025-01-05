@@ -8,10 +8,37 @@
 <body>
     <div id="witaj">
         <h1>Strona rodzica</h1>
-      </div>
+    </div>
+    <div id="dzieci">
+
+    </div>
     <div id="srodek">
+        <h1>Oceny</h1>
+        <div id="oceny">
+        </div>
+        <h1>Sprawdziany</h1>
+        <div id="sprawdziany">
+        </div>
+        <h1>Lekcje</h1>
+        <div id="lekcje">
+        </div>
+        <h1>Uwagi</h1>
+        <div id="uwagi">
+        </div>
+    </div>
     <div id="info">
     </div>
-    <script src="spript.js"></script>
+    <footer>
+        <a href="chpswd.html">
+            <button type="button">Zmień hasło</button>
+        </a>
+        <button type="button" onclick="logout()">Wyloguj</button>
+    </footer>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            rodzicu();
+        });
+    </script>
 </body>
 </html>

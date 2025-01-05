@@ -10,8 +10,36 @@
         <h1>Strona ucznia</h1>
       </div>
     <div id="srodek">
+        <h1>Oceny</h1>
+        <div id="oceny">
+        </div>
+        <h1>Sprawdziany</h1>
+        <div id="sprawdziany">
+        </div>
+        <h1>Lekcje</h1>
+        <div id="lekcje">
+            <button type="button" onclick="getlekcjeu()">lekcje</button>
+        </div>
+        <h1>Uwagi</h1>
+        <div id="uwagi">
+            <button type="button" onclick="getuwagiu()">uwagi</button>
+        </div>
+    </div>
     <div id="info">
     </div>
-    <script src="spript.js"></script>
+    <footer>
+        <a href="chpswd.html">
+            <button type="button">Zmień hasło</button>
+        </a>
+        <button type="button" onclick="logout()">Wyloguj</button>
+    </footer>
+    <script src="script.js" defer>
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            getocenyu();
+            getsprawdzianyu();
+        });
+    </script>
 </body>
 </html>
