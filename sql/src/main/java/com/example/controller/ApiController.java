@@ -955,7 +955,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            List<Sprawdzian> allSprawdzian = sprawdzianRepository.findByKlasa(klasa)
+            List<Sprawdzian> allSprawdzian = sprawdzianRepository.findByKlasa(klasa);
             int i = 2;
             toReturn.put(1, true);
             for(Sprawdzian sprawdzian:allSprawdzian){
