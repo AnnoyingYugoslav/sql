@@ -376,7 +376,7 @@ public class ApiController {
         }
     }
 
-    @GetMapping("/get-klasy")
+    @PostMapping("/get-klasy")
     public String getKlasy(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password -> 1:true false, rest... GOOD LUCK
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
@@ -406,7 +406,7 @@ public class ApiController {
         }
     }
         
-    @GetMapping("/get-uczniowie")
+    @PostMapping("/get-uczniowie")
     public String getMUczniowieKlasy(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password 3: Id klasy -> 1:true false, rest... GOOD LUCK
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
@@ -710,7 +710,7 @@ public class ApiController {
         }
     }
 
-    @GetMapping("/get-uwagi-uczen")
+    @PostMapping("/get-uwagi-uczen")
     public String getUwagiUczen(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password -> 1: true, flase 2:- rest
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
@@ -745,7 +745,7 @@ public class ApiController {
         }
     }
     
-    @GetMapping("/get-uwagi-nauczyciel/{id}") //id uczen you want to look at
+    @PostMapping("/get-uwagi-nauczyciel/{id}") //id uczen you want to look at
     public String getUwagiNau(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) { //1: login 2: password -> 1: true, flase 2:- rest
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
@@ -785,7 +785,7 @@ public class ApiController {
         }
     }
 
-    @GetMapping("/get-uwagi-nauczyciel-all")
+    @PostMapping("/get-uwagi-nauczyciel-all")
     public String getUwagiNauczycuek(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password -> 1: true, flase 2:- rest
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
@@ -820,7 +820,7 @@ public class ApiController {
         }
     }
 
-    @GetMapping("/get-oceny-uczen")
+    @PostMapping("/get-oceny-uczen")
     public String getOcenyUczen(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password -> 1: true, flase 2:- rest
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
@@ -855,7 +855,7 @@ public class ApiController {
         }
     }
     
-    @GetMapping("/get-oceny-nauczyciel/{id}") //id uczen you want to look at
+    @PostMapping("/get-oceny-nauczyciel/{id}") //id uczen you want to look at
     public String getOcenyNau(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) { //1: login 2: password -> 1: true, flase 2:- rest
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
@@ -895,7 +895,7 @@ public class ApiController {
         }
     }
 
-    @GetMapping("/get-sprawdziany-uczen")
+    @PostMapping("/get-sprawdziany-uczen")
     public String getSprawdzianyUczen(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password -> 1: true, flase 2:- rest
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
@@ -931,7 +931,7 @@ public class ApiController {
     }
     //wiadomości full handling - daj tylko tam, gdzie użytkownik wysłał
 
-    @GetMapping("/get-sprawdzian-nauczyciel/{id}") //id klasa
+    @PostMapping("/get-sprawdzian-nauczyciel/{id}") //id klasa
     public String getSprawdzianyNau(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) { //1: login 2: password -> 1: true, flase 2:- rest
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
@@ -971,7 +971,7 @@ public class ApiController {
         }
     }
 
-    @GetMapping("/get-uczen-rodzica")
+    @PostMapping("/get-uczen-rodzica")
     public String getUczenByRodzic(@RequestBody Map<Integer, Object> newMapData) { //1:login 2: password -> 1: true 2-ile masz dzieci : id dzieci
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
@@ -1006,7 +1006,7 @@ public class ApiController {
 
     }
     
-    @GetMapping("/get-sprawdzian-rodzic/{id}") //id ucznia
+    @PostMapping("/get-sprawdzian-rodzic/{id}") //id ucznia
     public String getSprawdzianyRodzic(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) { //1: login 2: password -> 1: true, flase 2:- rest
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
@@ -1030,7 +1030,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Relacja relacja = relacjaRepository.findAllByField1AndField2(userUczen, account.getUserRodzic());
+            Relacja relacja = relacjaRepository.findAllByUserUczenAndUserRodzic(userUczen, account.getUserRodzic());
             if(!(relacja instanceof Relacja)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
@@ -1051,7 +1051,7 @@ public class ApiController {
         }
     }
 
-    @GetMapping("/get-uwagi-rodzic/{id}") //id uczen you want to look at
+    @PostMapping("/get-uwagi-rodzic/{id}") //id uczen you want to look at
     public String getUwagiRodzic(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) { //1: login 2: password -> 1: true, flase 2:- rest
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
@@ -1075,7 +1075,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Relacja relacja = relacjaRepository.findAllByField1AndField2(userUczen, account.getUserRodzic());
+            Relacja relacja = relacjaRepository.findAllByUserUczenAndUserRodzic(userUczen, account.getUserRodzic());
             if(!(relacja instanceof Relacja)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
@@ -1096,7 +1096,7 @@ public class ApiController {
         }
     }
 
-    @GetMapping("/get-oceny-rodzic/{id}") //id uczen you want to look at
+    @PostMapping("/get-oceny-rodzic/{id}") //id uczen you want to look at
     public String getOcenyRodzic(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) { //1: login 2: password -> 1: true, flase 2:- rest
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
@@ -1120,7 +1120,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Relacja relacja = relacjaRepository.findAllByField1AndField2(userUczen, account.getUserRodzic());
+            Relacja relacja = relacjaRepository.findAllByUserUczenAndUserRodzic(userUczen, account.getUserRodzic());
             if(!(relacja instanceof Relacja)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
@@ -1141,7 +1141,7 @@ public class ApiController {
         }
     }
     
-    @GetMapping("/get-lekcja-uczen")
+    @PostMapping("/get-lekcja-uczen")
     public String getLekcjaUczen(@RequestBody Map<Integer, Object> newMapData) { //the same
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
@@ -1175,7 +1175,7 @@ public class ApiController {
         }
     }
     
-    @GetMapping("/get-lekcja-rodzic/{id}")
+    @PostMapping("/get-lekcja-rodzic/{id}")
     public String getLekcjaUczen(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) {
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
@@ -1199,7 +1199,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Relacja relacja = relacjaRepository.findAllByField1AndField2(userUczen, account.getUserRodzic());
+            Relacja relacja = relacjaRepository.findAllByUserUczenAndUserRodzic(userUczen, account.getUserRodzic());
             if(!(relacja instanceof Relacja)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
@@ -1220,7 +1220,7 @@ public class ApiController {
     
     }
 
-    @GetMapping("/get-lekcja-rodzic/{id}") //id klasy!
+    @PostMapping("/get-lekcja-nauczyciel/{id}") //id klasy!
     public String getLekcjaNauczyciel(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) {
         Map<Integer, Object> toReturn = new HashMap<>();
         try{

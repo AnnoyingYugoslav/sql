@@ -13,5 +13,5 @@ import com.example.sql.entities.UserUczen;
 public interface RelacjaRepository extends JpaRepository<Relacja, Long> {
     List<Relacja> findByUserRodzic(UserRodzic userRodzic);
     List<Relacja> findByUserUczen(UserUczen userUczen);
-    Relacja findAllByField1AndField2(UserUczen userUczen, UserRodzic userRodzic);
+    Relacja findAllByUserUczenAndUserRodzic(UserUczen userUczen, UserRodzic userRodzic);
 }
