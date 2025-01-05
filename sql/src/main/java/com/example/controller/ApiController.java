@@ -2,6 +2,7 @@ package com.example.controller;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
@@ -608,10 +609,28 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            
-            Lekcja lekcja = new Lekcja(null, null, dzien, klasa, sala, nauczyciel)
-            Uwaga savedUwaga = uwagaRepository.save(uwaga);
-            if(!(savedUwaga instanceof Uwaga)){
+            Klasa klasa = klasaRepository.getReferenceById((Long) newMapData.get(4));
+            if(!(klasa instanceof Klasa)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Sala sala = salaRepository.getReferenceById((Long) newMapData.get(5));
+            if(!(sala instanceof Sala)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            UserNauczyciel nauczyciel = userNauczycielRepository.getReferenceById((Long) newMapData.get(6));
+            if(!(nauczyciel instanceof UserNauczyciel)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            LocalTime startTime = LocalTime.parse((String) newMapData.get(7));
+            LocalTime endtTime = LocalTime.parse((String) newMapData.get(8));
+
+
+            Lekcja lekcja = new Lekcja(startTime,endtTime, dzien, klasa, sala, nauczyciel);
+            Lekcja savedLekcja = lekcjaRepository.save(lekcja);
+            if(!(savedLekcja instanceof Lekcja)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
@@ -624,6 +643,62 @@ public class ApiController {
         }
     }
     
+    @PutMapping("/edit-lekcja/{id}")
+    public String putMethodName(@PathVariable String id, @RequestBody Map<Integer, Object> newMapData) { //1: lgin 2: password 3: id dzien 4: id klasa 5: id sala 6: id nauczyciela 7: time start 8: time end -> true/false
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserNauczyciel() == null){ //not a teacher
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Dzien dzien = dzienRepository.getReferenceById((Long) newMapData.get(3));
+            if(!(dzien instanceof Dzien)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Klasa klasa = klasaRepository.getReferenceById((Long) newMapData.get(4));
+            if(!(klasa instanceof Klasa)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Sala sala = salaRepository.getReferenceById((Long) newMapData.get(5));
+            if(!(sala instanceof Sala)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            UserNauczyciel nauczyciel = userNauczycielRepository.getReferenceById((Long) newMapData.get(6));
+            if(!(nauczyciel instanceof UserNauczyciel)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            LocalTime startTime = LocalTime.parse((String) newMapData.get(7));
+            LocalTime endtTime = LocalTime.parse((String) newMapData.get(8));
 
+
+            Lekcja lekcja = new Lekcja(startTime,endtTime, dzien, klasa, sala, nauczyciel);
+            Lekcja savedLekcja = lekcjaRepository.save(lekcja);
+            if(!(savedLekcja instanceof Lekcja)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            toReturn.put(1, true);
+            return convertMapToJson(toReturn);
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
 
 }
