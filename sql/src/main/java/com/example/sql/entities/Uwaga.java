@@ -2,6 +2,9 @@ package com.example.sql.entities;
 
 import java.time.LocalDateTime;
 
+import com.example.sql.converters.DzienConverter;
+import com.example.sql.converters.GodzinaConverter;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -15,8 +18,11 @@ public class Uwaga {
     @Column(name = "tresc", nullable = false, columnDefinition = "TEXT")
     private String tresc;
 
-    @Column(name = "data", nullable = false)
-    private LocalDateTime dzien;
+    @Convert(converter = DzienConverter.class)
+    private Dzien dzien;
+
+    @Convert(converter = GodzinaConverter.class)
+    private Godzina godzina;
 
     @ManyToOne
     @JoinColumn(name = "id_ucznia", nullable = false)
@@ -25,6 +31,14 @@ public class Uwaga {
     @ManyToOne
     @JoinColumn(name = "id_nauczyciela", nullable = false)
     private UserNauczyciel nauczyciel;
+
+    public Uwaga(String tresc, Dzien dzien, Godzina godzina, UserUczen uczen, UserNauczyciel nauczyciel) {
+        this.tresc = tresc;
+        this.dzien = dzien;
+        this.godzina = godzina;
+        this.uczen = uczen;
+        this.nauczyciel = nauczyciel;
+    }
 
     public Uwaga() {
     }
@@ -61,21 +75,6 @@ public class Uwaga {
         this.nauczyciel = nauczyciel;
     }
 
-    public LocalDateTime getData(){
-        return dzien;
-    }
-
-    public void setDzien(LocalDateTime dzien){
-        this.dzien = dzien;
-    }
-
-    public Uwaga(String tresc, LocalDateTime data, UserUczen uczen, UserNauczyciel nauczyciel) {
-        this.tresc = tresc;
-        this.dzien = data;
-        this.uczen = uczen;
-        this.nauczyciel = nauczyciel;
-    }
-
     @Override
     public String toString() {
         return "Uwaga{" +
@@ -85,5 +84,21 @@ public class Uwaga {
                 ", uczen=" + uczen +
                 ", nauczyciel=" + nauczyciel +
                 '}';
+    }
+
+    public Dzien getDzien() {
+        return dzien;
+    }
+
+    public void setDzien(Dzien dzien) {
+        this.dzien = dzien;
+    }
+
+    public Godzina getGodzina() {
+        return godzina;
+    }
+
+    public void setGodzina(Godzina godzina) {
+        this.godzina = godzina;
     }
 }

@@ -1,7 +1,10 @@
 package com.example.sql.entities;
 
 import jakarta.persistence.*;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
+
+import com.example.sql.converters.DzienConverter;
+import com.example.sql.converters.GodzinaConverter;
 
 
 @Entity
@@ -12,14 +15,13 @@ public class Lekcja {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "start_time", nullable = false)
-    private LocalTime start;
+    @Convert(converter = GodzinaConverter.class)
+    private Godzina start;
 
-    @Column(name = "end_time", nullable = false)
-    private LocalTime end;
+    @Convert(converter = GodzinaConverter.class)
+    private Godzina end;
 
-    @ManyToOne
-    @JoinColumn(name = "dzien", nullable = false)
+    @Convert(converter = DzienConverter.class)
     private Dzien dzien;
 
     @ManyToOne
@@ -38,10 +40,8 @@ public class Lekcja {
     @JoinColumn(name = "przedmiot", nullable = false)
     private Przedmiot przedmiot;
 
-    public Lekcja() {
-    }
-
-    public Lekcja(LocalTime start, LocalTime end, Dzien dzien, Klasa klasa, Sala sala, UserNauczyciel nauczyciel, Przedmiot przedmiot) {
+    public Lekcja(Godzina start, Godzina end, Dzien dzien, Klasa klasa, Sala sala, UserNauczyciel nauczyciel,
+            Przedmiot przedmiot) {
         this.start = start;
         this.end = end;
         this.dzien = dzien;
@@ -51,61 +51,12 @@ public class Lekcja {
         this.przedmiot = przedmiot;
     }
 
-    public Long getId() {
-        return id;
+
+
+    public Lekcja() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalTime getStart() {
-        return start;
-    }
-
-    public void setStart(LocalTime start) {
-        this.start = start;
-    }
-
-    public LocalTime getEnd() {
-        return end;
-    }
-
-    public void setEnd(LocalTime end) {
-        this.end = end;
-    }
-
-    public Dzien getDzien() {
-        return dzien;
-    }
-
-    public void setDzien(Dzien dzien) {
-        this.dzien = dzien;
-    }
-
-    public Klasa getKlasa() {
-        return klasa;
-    }
-
-    public void setKlasa(Klasa klasa) {
-        this.klasa = klasa;
-    }
-
-    public Sala getSala() {
-        return sala;
-    }
-
-    public void setSala(Sala sala) {
-        this.sala = sala;
-    }
-
-    public UserNauczyciel getNauczyciel() {
-        return nauczyciel;
-    }
-
-    public void setNauczyciel(UserNauczyciel nauczyciel) {
-        this.nauczyciel = nauczyciel;
-    }
+    
 
     @Override
     public String toString() {
@@ -126,5 +77,89 @@ public class Lekcja {
 
     public void setPrzedmiot(Przedmiot przedmiot) {
         this.przedmiot = przedmiot;
+    }
+
+
+
+    public Long getId() {
+        return id;
+    }
+
+
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+
+
+    public Godzina getStart() {
+        return start;
+    }
+
+
+
+    public void setStart(Godzina start) {
+        this.start = start;
+    }
+
+
+
+    public Godzina getEnd() {
+        return end;
+    }
+
+
+
+    public void setEnd(Godzina end) {
+        this.end = end;
+    }
+
+
+
+    public Dzien getDzien() {
+        return dzien;
+    }
+
+
+
+    public void setDzien(Dzien dzien) {
+        this.dzien = dzien;
+    }
+
+
+
+    public Klasa getKlasa() {
+        return klasa;
+    }
+
+
+
+    public void setKlasa(Klasa klasa) {
+        this.klasa = klasa;
+    }
+
+
+
+    public Sala getSala() {
+        return sala;
+    }
+
+
+
+    public void setSala(Sala sala) {
+        this.sala = sala;
+    }
+
+
+
+    public UserNauczyciel getNauczyciel() {
+        return nauczyciel;
+    }
+
+
+
+    public void setNauczyciel(UserNauczyciel nauczyciel) {
+        this.nauczyciel = nauczyciel;
     }
 }

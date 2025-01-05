@@ -2,12 +2,26 @@ package com.example.sql.entities;
 
 import java.time.LocalDateTime;
 
+import com.example.sql.converters.DzienConverter;
+import com.example.sql.converters.GodzinaConverter;
+
 import jakarta.persistence.*;
 
 
 @Entity
 @Table(name = "ocena")
 public class Ocena {
+
+    public Ocena(Integer ocena, Dzien dzien, Godzina godzina, UserUczen uczen, UserNauczyciel nauczyciel,
+            Przedmiot przedmiot, String opis) {
+        this.ocena = ocena;
+        this.dzien = dzien;
+        this.godzina = godzina;
+        this.uczen = uczen;
+        this.nauczyciel = nauczyciel;
+        this.przedmiot = przedmiot;
+        this.opis = opis;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,8 +30,11 @@ public class Ocena {
     @Column(name = "ocena", nullable = false)
     private Integer ocena;
 
-    @Column(name = "data", nullable = false)
-    private LocalDateTime dzien;
+    @Convert(converter = DzienConverter.class)
+    private Dzien dzien;
+
+    @Convert(converter = GodzinaConverter.class)
+    private Godzina godzina;
 
     @ManyToOne
     @JoinColumn(name = "id_ucznia", nullable = false)
@@ -76,14 +93,7 @@ public class Ocena {
         this.przedmiot = przedmiot;
     }
 
-    public Ocena(Integer ocena, LocalDateTime data, UserUczen uczen, UserNauczyciel nauczyciel, Przedmiot przedmiot, String opis) {
-        this.ocena = ocena;
-        this.dzien = data;
-        this.uczen = uczen;
-        this.nauczyciel = nauczyciel;
-        this.przedmiot = przedmiot;
-        this.opis = opis;
-    }
+    
 
     @Override
     public String toString() {
@@ -97,13 +107,6 @@ public class Ocena {
                 '}';
     }
 
-    public LocalDateTime getDzien() {
-        return dzien;
-    }
-
-    public void setDzien(LocalDateTime dzien) {
-        this.dzien = dzien;
-    }
 
     public String getOpis() {
         return opis;
@@ -111,5 +114,17 @@ public class Ocena {
 
     public void setOpis(String opis) {
         this.opis = opis;
+    }
+
+    public void setDzien(Dzien dzien) {
+        this.dzien = dzien;
+    }
+
+    public Godzina getGodzina() {
+        return godzina;
+    }
+
+    public void setGodzina(Godzina godzina) {
+        this.godzina = godzina;
     }
 }

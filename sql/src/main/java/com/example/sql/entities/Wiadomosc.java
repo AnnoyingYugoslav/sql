@@ -15,9 +15,6 @@ public class Wiadomosc {
     @Column(name = "tresc", nullable = false, columnDefinition = "TEXT")
     private String tresc;
 
-    @ManyToOne
-    @JoinColumn(name = "data", nullable = false)
-    private Dzien dzien;
 
     @Lob //LOB czy BLOB ?
     @Column(name = "zalaczniki")
@@ -29,7 +26,6 @@ public class Wiadomosc {
     public Wiadomosc(String tytul, String tresc, Dzien data, byte[] zalaczniki) {
         this.tytul = tytul;
         this.tresc = tresc;
-        this.dzien = data;
         this.zalaczniki = zalaczniki;
     }
 
@@ -72,7 +68,6 @@ public class Wiadomosc {
                 "id=" + id +
                 ", tytul='" + tytul + '\'' +
                 ", tresc='" + tresc + '\'' +
-                ", data=" + dzien +
                 '}';
     }
 }

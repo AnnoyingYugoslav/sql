@@ -1,8 +1,8 @@
 package com.example.controller;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ApiController {
 
     private final KlasaRepository klasaRepository;
-    private final DzienRepository dzienRepository;
     private final LekcjaRepository lekcjaRepository;
     private final OcenaRepository ocenaRepository;
     private final PrzedmiotRepository przedmiotRepository;
@@ -50,7 +49,7 @@ public class ApiController {
     private final AccountRepository accountRepository;
     private final RelacjaRepository relacjaRepository;
 
-    public ApiController(KlasaRepository klasaRepository, DzienRepository dzienRepository,
+    public ApiController(KlasaRepository klasaRepository,
             LekcjaRepository lekcjaRepository, OcenaRepository ocenaRepository, PrzedmiotRepository przedmiotRepository,
             SalaRepository salaRepository, SprawdzianRepository sprawdzianRepository,
             UserNauczycielRepository userNauczycielRepository, UserRodzicRepository userRodzicRepository,
@@ -58,7 +57,6 @@ public class ApiController {
             WiadomoscRepository wiadomoscRepository, WiadomoscNRepository wiadomoscNRepository,
             WiadomoscRRepository wiadomoscRRepository, WiadomoscURepository wiadomoscURepository, AccountRepository accountRepository, RelacjaRepository relacjaRepository) {
         this.klasaRepository = klasaRepository;
-        this.dzienRepository = dzienRepository;
         this.lekcjaRepository = lekcjaRepository;
         this.ocenaRepository = ocenaRepository;
         this.przedmiotRepository = przedmiotRepository;
@@ -126,17 +124,19 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            UserUczen userUczen = userUczenRepository.getReferenceById((Long)newMapData.get(3));
+            UserUczen userUczen = userUczenRepository.getReferenceById(Long.parseLong(newMapData.get(3).toString()));
             if(!(userUczen instanceof UserUczen)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Przedmiot przedmiot = przedmiotRepository.getReferenceById((Long)newMapData.get(5));
+            Przedmiot przedmiot = przedmiotRepository.getReferenceById(Long.parseLong(newMapData.get(5).toString()));
             if(!(przedmiot instanceof Przedmiot)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Ocena ocena = new Ocena((Integer)newMapData.get(4), LocalDateTime.now(), userUczen, account.getUserNauczyciel(), przedmiot, newMapData.get(6).toString());
+            Dzien dzien = new Dzien(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
+            Godzina godzina = new Godzina(LocalTime.now().getHour(), LocalTime.now().getMinute());
+            Ocena ocena = new Ocena(Integer.parseInt(newMapData.get(4).toString()), dzien, godzina, userUczen, account.getUserNauczyciel(), przedmiot, newMapData.get(6).toString());
             Ocena savedOcena = ocenaRepository.save(ocena);
             if(!(savedOcena instanceof Ocena)){
                 toReturn.put(1, false);
@@ -146,13 +146,14 @@ public class ApiController {
             return convertMapToJson(toReturn);
         }
         catch(Throwable e){
+            System.out.println(e);
             toReturn.put(1, false);
             return convertMapToJson(toReturn);
         }
     }
 
     @PutMapping("/edit-ocena/{id}") //id - id oceny
-    public String editOcena(@PathVariable String id, @RequestBody Map<Integer, Object> newMapData) { //1: login 2:password 3: ocena wartość nowa -> 1: true/false
+    public String editOcena(@PathVariable Long id, @RequestBody Map<Integer, Object> newMapData) { //1: login 2:password 3: ocena wartość nowa -> 1: true/false
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
             String login = newMapData.get(1).toString();
@@ -170,12 +171,12 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Ocena ocena = ocenaRepository.getReferenceById(Long.parseLong(id));
+            Ocena ocena = ocenaRepository.getReferenceById(id);
             if(!(ocena instanceof Ocena)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            ocena.setOcena((Integer) newMapData.get(3));
+            ocena.setOcena(Integer.parseInt( newMapData.get(3).toString()));
             Ocena savedOcena = ocenaRepository.save(ocena);
             if(!(savedOcena instanceof Ocena)){
                 toReturn.put(1, false);
@@ -225,7 +226,7 @@ public class ApiController {
     }
 
     @PostMapping("/add-sprawdzian")
-    public String addSprawdzian(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password 3: Id Klasy 4: Przedmiot Id 5: Dzien Id 6: Sala Id 7: String kategoria-> 1: true/false
+    public String addSprawdzian(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password 3: Id Klasy 4: Przedmiot Id 5: Dzien String(DD.MM.YYYY) 6: Sala Id 7: String kategoria 8: godzina (HH:MM)-> 1: true/false
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
             String login = newMapData.get(1).toString();
@@ -243,27 +244,29 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Przedmiot przedmiot = przedmiotRepository.getReferenceById((Long)newMapData.get(4));
+            Przedmiot przedmiot = przedmiotRepository.getReferenceById(Long.parseLong(newMapData.get(4).toString()));
             if(!(przedmiot instanceof Przedmiot)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Klasa klasa = klasaRepository.getReferenceById((Long)newMapData.get(3));
+            Klasa klasa = klasaRepository.getReferenceById(Long.parseLong(newMapData.get(3).toString()));
             if(!(klasa instanceof Klasa)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Dzien dzien = dzienRepository.getReferenceById((Long)newMapData.get(5));
-            if(!(dzien instanceof Dzien)){
-                toReturn.put(1, false);
-                return convertMapToJson(toReturn);
-            }
-            Sala sala = salaRepository.getReferenceById((Long) newMapData.get(6));
+            Sala sala = salaRepository.getReferenceById(Long.parseLong( newMapData.get(6).toString()));
             if(!(sala instanceof Sala)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Sprawdzian sprawdzian = new Sprawdzian(newMapData.get(7).toString(), account.getUserNauczyciel(), sala, klasa, przedmiot, dzien);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("HH:mm");
+            LocalDate date = LocalDate.parse(newMapData.get(5).toString(), formatter);
+            LocalTime time = LocalTime.parse(newMapData.get(8).toString(), formatter2);
+
+            Dzien dzien = new Dzien(date.getYear(), date.getMonthValue(), date.getDayOfMonth());
+            Godzina godzina = new Godzina(time.getHour(), time.getMinute());
+            Sprawdzian sprawdzian = new Sprawdzian(newMapData.get(7).toString(), account.getUserNauczyciel(), sala, klasa, przedmiot, dzien, godzina);
             Sprawdzian savedSprawdzian = sprawdzianRepository.save(sprawdzian);
             if(!(savedSprawdzian instanceof Sprawdzian)){
                 toReturn.put(1, false);
@@ -279,7 +282,7 @@ public class ApiController {
     }
 
     @PutMapping("/edit-sprawdzian/{id}")//id - id sprawdzianu
-    public String editSprawdzian(@PathVariable String id, @RequestBody Map<Integer, Object> newMapData) { //1: login 2:password 3: Id klasy 4: id przedmiotu 5: id dzien 6: id sala 7: nowa kategoria -> 1: true/false
+    public String editSprawdzian(@PathVariable String id, @RequestBody Map<Integer, Object> newMapData) { //1: login 2:password 3: Id klasy 4: id przedmiotu 5: Dzien String(DD.MM.YYYY) 6: id sala 7: nowa kategoria 8: godzina (HH:MM)-> 1: true/false
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
             String login = newMapData.get(1).toString();
@@ -297,22 +300,17 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Przedmiot przedmiot = przedmiotRepository.getReferenceById((Long)newMapData.get(4));
+            Przedmiot przedmiot = przedmiotRepository.getReferenceById(Long.parseLong(newMapData.get(4).toString()));
             if(!(przedmiot instanceof Przedmiot)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Klasa klasa = klasaRepository.getReferenceById((Long)newMapData.get(3));
+            Klasa klasa = klasaRepository.getReferenceById(Long.parseLong(newMapData.get(3).toString()));
             if(!(klasa instanceof Klasa)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Dzien dzien = dzienRepository.getReferenceById((Long)newMapData.get(5));
-            if(!(dzien instanceof Dzien)){
-                toReturn.put(1, false);
-                return convertMapToJson(toReturn);
-            }
-            Sala sala = salaRepository.getReferenceById((Long) newMapData.get(6));
+            Sala sala = salaRepository.getReferenceById(Long.parseLong( newMapData.get(6).toString()));
             if(!(sala instanceof Sala)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
@@ -322,11 +320,19 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("HH:mm");
+            LocalDate date = LocalDate.parse(newMapData.get(5).toString(), formatter);
+            LocalTime time = LocalTime.parse(newMapData.get(8).toString(), formatter2);
+
+            Dzien dzien = new Dzien(date.getYear(), date.getMonthValue(), date.getDayOfMonth());
+            Godzina godzina = new Godzina(time.getHour(), time.getMinute());
             sprawdzian.setPrzedmiot(przedmiot);
             sprawdzian.setKlasa(klasa);
             sprawdzian.setSala(sala);
-            sprawdzian.setDzien(dzien);
             sprawdzian.setKategoria(newMapData.get(7).toString());
+            sprawdzian.setDzien(dzien);
+            sprawdzian.setGodzina(godzina);
 
             Sprawdzian savedSprawdzian = sprawdzianRepository.save(sprawdzian);
             if(!(savedSprawdzian instanceof Sprawdzian)){
@@ -425,7 +431,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Klasa klasa = klasaRepository.getReferenceById((Long) newMapData.get(3));
+            Klasa klasa = klasaRepository.getReferenceById(Long.parseLong( newMapData.get(3).toString()));
             if(!(klasa instanceof Klasa)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
@@ -497,13 +503,14 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            UserUczen userUczen = userUczenRepository.getReferenceById((Long)newMapData.get(3));
+            UserUczen userUczen = userUczenRepository.getReferenceById(Long.parseLong(newMapData.get(3).toString()));
             if(!(userUczen instanceof UserUczen)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            
-            Uwaga uwaga = new Uwaga(newMapData.get(4).toString(), LocalDateTime.now(), userUczen, account.getUserNauczyciel());
+            Dzien dzien = new Dzien(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
+            Godzina godzina = new Godzina(LocalTime.now().getHour(), LocalTime.now().getMinute());
+            Uwaga uwaga = new Uwaga(newMapData.get(4).toString(), dzien, godzina, userUczen, account.getUserNauczyciel());
             Uwaga savedUwaga = uwagaRepository.save(uwaga);
             if(!(savedUwaga instanceof Uwaga)){
                 toReturn.put(1, false);
@@ -589,7 +596,7 @@ public class ApiController {
     }
 
     @PostMapping("/add-leckja")
-    public String addLekcja(@RequestBody Map<Integer, Object> newMapData) { //1: lgin 2: password 3: id dzien 4: id klasa 5: id sala 6: id nauczyciela 7: time start 8: time end 9: id przedmiot-> true/false
+    public String addLekcja(@RequestBody Map<Integer, Object> newMapData) { //1: lgin 2: password 3: dzien 4: id klasa 5: id sala 6: id nauczyciela 7: time start 8: time end 9: id przedmiot-> true/false
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
             String login = newMapData.get(1).toString();
@@ -607,36 +614,37 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Dzien dzien = dzienRepository.getReferenceById((Long) newMapData.get(3));
-            if(!(dzien instanceof Dzien)){
-                toReturn.put(1, false);
-                return convertMapToJson(toReturn);
-            }
-            Klasa klasa = klasaRepository.getReferenceById((Long) newMapData.get(4));
+            Klasa klasa = klasaRepository.getReferenceById(Long.parseLong( newMapData.get(4).toString()));
             if(!(klasa instanceof Klasa)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Sala sala = salaRepository.getReferenceById((Long) newMapData.get(5));
+            Sala sala = salaRepository.getReferenceById(Long.parseLong( newMapData.get(5).toString()));
             if(!(sala instanceof Sala)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            UserNauczyciel nauczyciel = userNauczycielRepository.getReferenceById((Long) newMapData.get(6));
+            UserNauczyciel nauczyciel = userNauczycielRepository.getReferenceById(Long.parseLong( newMapData.get(6).toString()));
             if(!(nauczyciel instanceof UserNauczyciel)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Przedmiot przedmiot = przedmiotRepository.getReferenceById((Long) newMapData.get(9));
+            Przedmiot przedmiot = przedmiotRepository.getReferenceById(Long.parseLong( newMapData.get(9).toString()));
             if(!(przedmiot instanceof Przedmiot)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            LocalTime startTime = LocalTime.parse((String) newMapData.get(7));
-            LocalTime endtTime = LocalTime.parse((String) newMapData.get(8));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("HH:mm");
+            LocalDate date = LocalDate.parse(newMapData.get(3).toString(), formatter);
+            LocalTime time1 = LocalTime.parse(newMapData.get(8).toString(), formatter2);
+            LocalTime time2 = LocalTime.parse(newMapData.get(9).toString(), formatter2);
 
+            Dzien dzien = new Dzien(date.getYear(), date.getMonthValue(), date.getDayOfMonth());
+            Godzina godzina1 = new Godzina(time1.getHour(), time1.getMinute());
+            Godzina godzina2 = new Godzina(time2.getHour(), time2.getMinute());
 
-            Lekcja lekcja = new Lekcja(startTime,endtTime, dzien, klasa, sala, nauczyciel, przedmiot);
+            Lekcja lekcja = new Lekcja(godzina1,godzina2, dzien, klasa, sala, nauczyciel, przedmiot);
             Lekcja savedLekcja = lekcjaRepository.save(lekcja);
             if(!(savedLekcja instanceof Lekcja)){
                 toReturn.put(1, false);
@@ -670,42 +678,44 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Dzien dzien = dzienRepository.getReferenceById((Long) newMapData.get(3));
-            if(!(dzien instanceof Dzien)){
-                toReturn.put(1, false);
-                return convertMapToJson(toReturn);
-            }
-            Klasa klasa = klasaRepository.getReferenceById((Long) newMapData.get(4));
+            Klasa klasa = klasaRepository.getReferenceById(Long.parseLong( newMapData.get(4).toString()));
             if(!(klasa instanceof Klasa)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Sala sala = salaRepository.getReferenceById((Long) newMapData.get(5));
+            Sala sala = salaRepository.getReferenceById(Long.parseLong( newMapData.get(5).toString()));
             if(!(sala instanceof Sala)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            UserNauczyciel nauczyciel = userNauczycielRepository.getReferenceById((Long) newMapData.get(6));
+            UserNauczyciel nauczyciel = userNauczycielRepository.getReferenceById(Long.parseLong( newMapData.get(6).toString()));
             if(!(nauczyciel instanceof UserNauczyciel)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Przedmiot przedmiot = przedmiotRepository.getReferenceById((Long) newMapData.get(9));
+            Przedmiot przedmiot = przedmiotRepository.getReferenceById(Long.parseLong( newMapData.get(9).toString()));
             if(!(przedmiot instanceof Przedmiot)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            LocalTime startTime = LocalTime.parse((String) newMapData.get(7));
-            LocalTime endtTime = LocalTime.parse((String) newMapData.get(8));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("HH:mm");
+            LocalDate date = LocalDate.parse(newMapData.get(3).toString(), formatter);
+            LocalTime time1 = LocalTime.parse(newMapData.get(8).toString(), formatter2);
+            LocalTime time2 = LocalTime.parse(newMapData.get(9).toString(), formatter2);
+
+            Dzien dzien = new Dzien(date.getYear(), date.getMonthValue(), date.getDayOfMonth());
+            Godzina godzina1 = new Godzina(time1.getHour(), time1.getMinute());
+            Godzina godzina2 = new Godzina(time2.getHour(), time2.getMinute());
 
 
             Lekcja lekcja = lekcjaRepository.getReferenceById(id);
             lekcja.setDzien(dzien);
-            lekcja.setEnd(endtTime);
+            lekcja.setEnd(godzina2);
             lekcja.setKlasa(klasa);
             lekcja.setNauczyciel(nauczyciel);
             lekcja.setSala(sala);
-            lekcja.setStart(startTime);
+            lekcja.setStart(godzina1);
             lekcja.setPrzedmiot(przedmiot);
 
             Lekcja savedLekcja = lekcjaRepository.save(lekcja);

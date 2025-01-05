@@ -1,4 +1,7 @@
 package com.example.sql.entities;
+import com.example.sql.converters.DzienConverter;
+import com.example.sql.converters.GodzinaConverter;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -28,21 +31,27 @@ public class Sprawdzian {
     @JoinColumn(name = "id_przedmiotu", nullable = false)
     private Przedmiot przedmiot;
 
-    @ManyToOne
-    @JoinColumn(name = "dzien", nullable = false)
+    @Convert(converter = DzienConverter.class)
     private Dzien dzien;
 
-    public Sprawdzian() {
-    }
+    @Convert(converter = GodzinaConverter.class)
+    private Godzina godzina;
 
-    public Sprawdzian(String kategoria, UserNauczyciel nauczyciel, Sala sala, Klasa klasa, Przedmiot przedmiot, Dzien dzien) {
+    public Sprawdzian(String kategoria, UserNauczyciel nauczyciel, Sala sala, Klasa klasa, Przedmiot przedmiot,
+            Dzien dzien, Godzina godzina) {
         this.kategoria = kategoria;
         this.nauczyciel = nauczyciel;
         this.sala = sala;
         this.klasa = klasa;
         this.przedmiot = przedmiot;
         this.dzien = dzien;
+        this.godzina = godzina;
     }
+
+
+    public Sprawdzian() {
+    }
+
 
     public Long getId() {
         return id;
@@ -110,5 +119,13 @@ public class Sprawdzian {
                 ", klasa=" + klasa +
                 ", przedmiot=" + przedmiot +
                 '}';
+    }
+
+    public Godzina getGodzina() {
+        return godzina;
+    }
+
+    public void setGodzina(Godzina godzina) {
+        this.godzina = godzina;
     }
 }
