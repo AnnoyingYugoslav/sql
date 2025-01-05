@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
@@ -186,6 +187,40 @@ public class ApiController {
         }
     }
     
+    @DeleteMapping("/remove-ocena/{id}")
+    public String removeOcena(@PathVariable Long id, @RequestBody Map<Integer, Object> newMapData){ //1:login 2:password -> true, false
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserNauczyciel() == null){ //not a teacher
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Ocena ocena = ocenaRepository.getReferenceById(id);
+            if(!(ocena instanceof Ocena)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            ocenaRepository.delete(ocena);
+            toReturn.put(1, true);
+            return convertMapToJson(toReturn);
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+
     @PostMapping("/add-sprawdzian")
     public String addSprawdzian(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password 3: Id Klasy 4: Przedmiot Id 5: Dzien Id 6: Sala Id 7: String kategoria-> 1: true/false
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -240,8 +275,6 @@ public class ApiController {
         }
     }
 
-
-    
     @PutMapping("/edit-sprawdzian/{id}")//id - id sprawdzianu
     public String editSprawdzian(@PathVariable String id, @RequestBody Map<Integer, Object> newMapData) { //1: login 2:password 3: Id klasy 4: id przedmiotu 5: id dzien 6: id sala 7: nowa kategoria -> 1: true/false
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -299,6 +332,40 @@ public class ApiController {
             }
             toReturn.put(1, true);
                 return convertMapToJson(toReturn);
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+
+    @DeleteMapping("/remove-sprawdzian/{id}")
+    public String removeSprawdzian(@PathVariable Long id, @RequestBody Map<Integer, Object> newMapData){ //1: logi 2:password -> true/false
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserNauczyciel() == null){ //not a teacher
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Sprawdzian sprawdzian = sprawdzianRepository.getReferenceById(id);
+            if(!(sprawdzian instanceof Sprawdzian)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            sprawdzianRepository.delete(sprawdzian);
+            toReturn.put(1, true);
+            return convertMapToJson(toReturn);
         }
         catch(Throwable e){
             toReturn.put(1, false);
@@ -374,9 +441,8 @@ public class ApiController {
         }
     }
     
-
     @PostMapping("/change-password")
-    public String postMethodName(@RequestBody Map<Integer, Object> newMapData) { //1: logn 2: password 3: new password -> 1:true
+    public String changePass(@RequestBody Map<Integer, Object> newMapData) { //1: logn 2: password 3: new password -> 1:true
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
             String login = newMapData.get(1).toString();
@@ -408,9 +474,156 @@ public class ApiController {
         }
     }
     
-    public String putMethodName(@PathVariable String id, @RequestBody String entity) {
-        //TODO: process PUT request
-        
-        return entity;
+    @PostMapping("/add-uwaga")
+    public String addOUwaga(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password 3: Id ucznia 4: tresc -> 1: true/false
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserNauczyciel() == null){ //not a teacher
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            UserUczen userUczen = userUczenRepository.getReferenceById((Long)newMapData.get(3));
+            if(!(userUczen instanceof UserUczen)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            
+            Uwaga uwaga = new Uwaga(newMapData.get(4).toString(), LocalDateTime.now(), userUczen, account.getUserNauczyciel());
+            Uwaga savedUwaga = uwagaRepository.save(uwaga);
+            if(!(savedUwaga instanceof Uwaga)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            toReturn.put(1, true);
+            return convertMapToJson(toReturn);
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
     }
+
+    @PutMapping("/edit-uwaga/{id}")
+    public String editUwaga(@PathVariable String id, @RequestBody Map<Integer, Object> newMapData) { //1: login 2: password 3: Id Uwagi 4: tresc -> 1: true/false
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserNauczyciel() == null){ //not a teacher
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Uwaga uwaga = uwagaRepository.getReferenceById(Long.parseLong(id));
+            uwaga.setTresc(newMapData.get(4).toString());
+            Uwaga savedUwaga = uwagaRepository.save(uwaga);
+            if(!(savedUwaga instanceof Uwaga)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            toReturn.put(1, true);
+            return convertMapToJson(toReturn);
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+
+    @DeleteMapping("/remove-uwaga/{id}")
+    public String removeUwaga(@PathVariable Long id, @RequestBody Map<Integer, Object> newMapData){ //1: logi 2:password -> true/false
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserNauczyciel() == null){ //not a teacher
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Uwaga uwaga = uwagaRepository.getReferenceById(id);
+            if(!(uwaga instanceof Uwaga)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            uwagaRepository.delete(uwaga);
+            toReturn.put(1, true);
+            return convertMapToJson(toReturn);
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    
+    }
+
+    @PostMapping("/add-leckja")
+    public String addLekcja(@RequestBody Map<Integer, Object> newMapData) { //1: lgin 2: password 3: id dzien 4: id klasa 5: id sala 6: id nauczyciela 7: time start 8: time end -> true/false
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserNauczyciel() == null){ //not a teacher
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Dzien dzien = dzienRepository.getReferenceById((Long) newMapData.get(3));
+            if(!(dzien instanceof Dzien)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            
+            Lekcja lekcja = new Lekcja(null, null, dzien, klasa, sala, nauczyciel)
+            Uwaga savedUwaga = uwagaRepository.save(uwaga);
+            if(!(savedUwaga instanceof Uwaga)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            toReturn.put(1, true);
+            return convertMapToJson(toReturn);
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+    
+
+
 }

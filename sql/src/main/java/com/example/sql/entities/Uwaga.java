@@ -1,5 +1,7 @@
 package com.example.sql.entities;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -13,9 +15,8 @@ public class Uwaga {
     @Column(name = "tresc", nullable = false, columnDefinition = "TEXT")
     private String tresc;
 
-    @ManyToOne
-    @JoinColumn(name = "data", nullable = false)
-    private Dzien dzien;
+    @Column(name = "data", nullable = false)
+    private LocalDateTime dzien;
 
     @ManyToOne
     @JoinColumn(name = "id_ucznia", nullable = false)
@@ -57,7 +58,15 @@ public class Uwaga {
         this.nauczyciel = nauczyciel;
     }
 
-    public Uwaga(String tresc, Dzien data, UserUczen uczen, UserNauczyciel nauczyciel) {
+    public LocalDateTime getData(){
+        return dzien;
+    }
+
+    public void setDzien(LocalDateTime dzien){
+        this.dzien = dzien;
+    }
+
+    public Uwaga(String tresc, LocalDateTime data, UserUczen uczen, UserNauczyciel nauczyciel) {
         this.tresc = tresc;
         this.dzien = data;
         this.uczen = uczen;
