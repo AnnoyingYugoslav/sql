@@ -34,16 +34,21 @@ public class Lekcja {
     @JoinColumn(name = "id_nauczyciela", nullable = false)
     private UserNauczyciel nauczyciel;
 
+    @ManyToOne
+    @JoinColumn(name = "przedmiot", nullable = false)
+    private Przedmiot przedmiot;
+
     public Lekcja() {
     }
 
-    public Lekcja(LocalTime start, LocalTime end, Dzien dzien, Klasa klasa, Sala sala, UserNauczyciel nauczyciel) {
+    public Lekcja(LocalTime start, LocalTime end, Dzien dzien, Klasa klasa, Sala sala, UserNauczyciel nauczyciel, Przedmiot przedmiot) {
         this.start = start;
         this.end = end;
         this.dzien = dzien;
         this.klasa = klasa;
         this.sala = sala;
         this.nauczyciel = nauczyciel;
+        this.przedmiot = przedmiot;
     }
 
     public Long getId() {
@@ -113,5 +118,13 @@ public class Lekcja {
                 ", sala=" + sala +
                 ", nauczyciel=" + nauczyciel +
                 '}';
+    }
+
+    public Przedmiot getPrzedmiot() {
+        return przedmiot;
+    }
+
+    public void setPrzedmiot(Przedmiot przedmiot) {
+        this.przedmiot = przedmiot;
     }
 }

@@ -31,6 +31,9 @@ public class Ocena {
     @JoinColumn(name = "id_przedmiotu", nullable = false)
     private Przedmiot przedmiot;
 
+    @Column(name = "opis", nullable = false)
+    private String opis;
+
     public Ocena() {
     }
 
@@ -73,12 +76,13 @@ public class Ocena {
         this.przedmiot = przedmiot;
     }
 
-    public Ocena(Integer ocena, LocalDateTime data, UserUczen uczen, UserNauczyciel nauczyciel, Przedmiot przedmiot) {
+    public Ocena(Integer ocena, LocalDateTime data, UserUczen uczen, UserNauczyciel nauczyciel, Przedmiot przedmiot, String opis) {
         this.ocena = ocena;
         this.dzien = data;
         this.uczen = uczen;
         this.nauczyciel = nauczyciel;
         this.przedmiot = przedmiot;
+        this.opis = opis;
     }
 
     @Override
@@ -91,5 +95,21 @@ public class Ocena {
                 ", nauczyciel=" + nauczyciel +
                 ", przedmiot=" + przedmiot +
                 '}';
+    }
+
+    public LocalDateTime getDzien() {
+        return dzien;
+    }
+
+    public void setDzien(LocalDateTime dzien) {
+        this.dzien = dzien;
+    }
+
+    public String getOpis() {
+        return opis;
+    }
+
+    public void setOpis(String opis) {
+        this.opis = opis;
     }
 }

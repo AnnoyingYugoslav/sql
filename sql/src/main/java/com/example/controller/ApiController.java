@@ -108,7 +108,7 @@ public class ApiController {
     
 
     @PostMapping("/add-ocena")
-    public String addOcena(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password 3: Id ucznia 4: ocena (wartość) 5: przedmiot id -> 1: true/false
+    public String addOcena(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password 3: Id ucznia 4: ocena (wartość) 5: przedmiot id 6: opis-> 1: true/false
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
             String login = newMapData.get(1).toString();
@@ -136,7 +136,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Ocena ocena = new Ocena((Integer)newMapData.get(4), LocalDateTime.now(), userUczen, account.getUserNauczyciel(), przedmiot);
+            Ocena ocena = new Ocena((Integer)newMapData.get(4), LocalDateTime.now(), userUczen, account.getUserNauczyciel(), przedmiot, newMapData.get(6).toString());
             Ocena savedOcena = ocenaRepository.save(ocena);
             if(!(savedOcena instanceof Ocena)){
                 toReturn.put(1, false);
@@ -469,6 +469,7 @@ public class ApiController {
                 }
             }
             toReturn.put(1, true);
+            accountRepository.save(account);
             return convertMapToJson(toReturn);
         }
         catch(Throwable e){
@@ -588,7 +589,7 @@ public class ApiController {
     }
 
     @PostMapping("/add-leckja")
-    public String addLekcja(@RequestBody Map<Integer, Object> newMapData) { //1: lgin 2: password 3: id dzien 4: id klasa 5: id sala 6: id nauczyciela 7: time start 8: time end -> true/false
+    public String addLekcja(@RequestBody Map<Integer, Object> newMapData) { //1: lgin 2: password 3: id dzien 4: id klasa 5: id sala 6: id nauczyciela 7: time start 8: time end 9: id przedmiot-> true/false
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
             String login = newMapData.get(1).toString();
@@ -626,11 +627,16 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
+            Przedmiot przedmiot = przedmiotRepository.getReferenceById((Long) newMapData.get(9));
+            if(!(przedmiot instanceof Przedmiot)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
             LocalTime startTime = LocalTime.parse((String) newMapData.get(7));
             LocalTime endtTime = LocalTime.parse((String) newMapData.get(8));
 
 
-            Lekcja lekcja = new Lekcja(startTime,endtTime, dzien, klasa, sala, nauczyciel);
+            Lekcja lekcja = new Lekcja(startTime,endtTime, dzien, klasa, sala, nauczyciel, przedmiot);
             Lekcja savedLekcja = lekcjaRepository.save(lekcja);
             if(!(savedLekcja instanceof Lekcja)){
                 toReturn.put(1, false);
@@ -646,7 +652,7 @@ public class ApiController {
     }
     
     @PutMapping("/edit-lekcja/{id}")
-    public String editLekcja(@PathVariable Long id, @RequestBody Map<Integer, Object> newMapData) { //1: lgin 2: password 3: id dzien 4: id klasa 5: id sala 6: id nauczyciela 7: time start 8: time end -> true/false
+    public String editLekcja(@PathVariable Long id, @RequestBody Map<Integer, Object> newMapData) { //1: lgin 2: password 3: id dzien 4: id klasa 5: id sala 6: id nauczyciela 7: time start 8: time end 9: id przedmiot -> true/false
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
             String login = newMapData.get(1).toString();
@@ -684,6 +690,11 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
+            Przedmiot przedmiot = przedmiotRepository.getReferenceById((Long) newMapData.get(9));
+            if(!(przedmiot instanceof Przedmiot)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
             LocalTime startTime = LocalTime.parse((String) newMapData.get(7));
             LocalTime endtTime = LocalTime.parse((String) newMapData.get(8));
 
@@ -695,6 +706,7 @@ public class ApiController {
             lekcja.setNauczyciel(nauczyciel);
             lekcja.setSala(sala);
             lekcja.setStart(startTime);
+            lekcja.setPrzedmiot(przedmiot);
 
             Lekcja savedLekcja = lekcjaRepository.save(lekcja);
             if(!(savedLekcja instanceof Lekcja)){
