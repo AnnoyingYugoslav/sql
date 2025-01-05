@@ -37,6 +37,8 @@ public class Account {
     @JoinColumn(name = "user_n_id", nullable = true)
     private UserNauczyciel userNauczyciel;
 
+    public Account() {
+    }
 
     private String hashPassword(String rawPassword){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();

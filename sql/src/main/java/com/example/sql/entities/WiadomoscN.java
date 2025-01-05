@@ -18,6 +18,9 @@ public class WiadomoscN {
     @JoinColumn(name = "id_odbiorcy", nullable = false)
     private UserNauczyciel odbiorca;
 
+    public WiadomoscN() {
+    }
+
     public WiadomoscN(Wiadomosc wiadomosc, UserNauczyciel odbiorca) {
         this.wiadomosc = wiadomosc;
         this.odbiorca = odbiorca;

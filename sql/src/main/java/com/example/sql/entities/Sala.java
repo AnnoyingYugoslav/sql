@@ -11,6 +11,9 @@ public class Sala {
     @Column(name = "nr_sali", nullable = false, length = 10)
     private String nazwa;
 
+    public Sala(){
+    }
+
     public Sala(Long id, String nazwa) {
         this.id = id;
         this.nazwa = nazwa;

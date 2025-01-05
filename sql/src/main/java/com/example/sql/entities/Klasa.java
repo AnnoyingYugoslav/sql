@@ -13,6 +13,9 @@ public class Klasa {
     @Column(name = "nazwa", nullable = false, length = 50)
     private String nazwa;
 
+    public Klasa() {
+    }
+    
     public Klasa(String nazwa) {
         this.nazwa = nazwa;
     }

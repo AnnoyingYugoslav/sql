@@ -31,6 +31,9 @@ public class Ocena {
     @JoinColumn(name = "id_przedmiotu", nullable = false)
     private Przedmiot przedmiot;
 
+    public Ocena() {
+    }
+
     public Long getId() {
         return id;
     }

@@ -34,6 +34,9 @@ public class Lekcja {
     @JoinColumn(name = "id_nauczyciela", nullable = false)
     private UserNauczyciel nauczyciel;
 
+    public Lekcja() {
+    }
+
     public Lekcja(LocalTime start, LocalTime end, Dzien dzien, Klasa klasa, Sala sala, UserNauczyciel nauczyciel) {
         this.start = start;
         this.end = end;

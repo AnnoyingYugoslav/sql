@@ -26,6 +26,9 @@ public class UserUczen extends User {
     @JoinColumn(name = "id_klasy", nullable = false)
     private Klasa klasa;
 
+    public UserUczen() {
+    }
+
     public UserUczen(String imie, String imie2, String nazwisko, String email, Klasa klasa) {
         this.imie = imie;
         this.imie2 = imie2;

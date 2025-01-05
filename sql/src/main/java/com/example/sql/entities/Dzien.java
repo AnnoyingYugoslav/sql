@@ -20,6 +20,9 @@ public class Dzien {
     @Column(name = "data", nullable = false)
     private LocalDate data;
 
+    public Dzien() {
+    }
+
     public Dzien(LocalDate data) {
         this.data = data;
     }

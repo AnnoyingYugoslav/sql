@@ -17,6 +17,9 @@ public class Przedmiot {
     @JoinColumn(name = "id_nauczyciela", nullable = false)
     private UserNauczyciel nauczyciel;
 
+    public Przedmiot() {
+    }
+
     // Constructor with parameters
 
     public Przedmiot(String nazwa, UserNauczyciel nauczyciel) {

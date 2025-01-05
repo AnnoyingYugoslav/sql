@@ -32,6 +32,8 @@ public class Sprawdzian {
     @JoinColumn(name = "dzien", nullable = false)
     private Dzien dzien;
 
+    public Sprawdzian() {
+    }
 
     public Sprawdzian(String kategoria, UserNauczyciel nauczyciel, Sala sala, Klasa klasa, Przedmiot przedmiot, Dzien dzien) {
         this.kategoria = kategoria;

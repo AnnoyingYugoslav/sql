@@ -23,6 +23,9 @@ public class Wiadomosc {
     @Column(name = "zalaczniki")
     private byte[] zalaczniki;
 
+    public Wiadomosc() {
+    }
+
     public Wiadomosc(String tytul, String tresc, Dzien data, byte[] zalaczniki) {
         this.tytul = tytul;
         this.tresc = tresc;

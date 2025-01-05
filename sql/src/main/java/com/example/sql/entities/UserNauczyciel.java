@@ -22,6 +22,9 @@ public class UserNauczyciel extends User {
     @Column(name = "email", length = 100)
     private String email;
 
+    public UserNauczyciel() {
+    }
+
     public UserNauczyciel(String imie, String imie2, String nazwisko, String email) {
         this.imie = imie;
         this.imie2 = imie2;

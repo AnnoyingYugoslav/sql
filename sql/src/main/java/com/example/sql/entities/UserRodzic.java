@@ -25,6 +25,9 @@ public class UserRodzic  extends User {
     @Column(name = "telefon", length = 15)
     private String telefon;
 
+    public UserRodzic() {
+    }
+
     public UserRodzic(String imie, String imie2, String nazwisko, String email, String telefon) {
         this.imie = imie;
         this.imie2 = imie2;

@@ -26,6 +26,9 @@ public class Uwaga {
     @JoinColumn(name = "id_nauczyciela", nullable = false)
     private UserNauczyciel nauczyciel;
 
+    public Uwaga() {
+    }
+
     public Long getId() {
         return id;
     }
