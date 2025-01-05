@@ -19,8 +19,12 @@ import com.example.sql.entities.Wiadomosc;
 import com.example.sql.entities.WiadomoscN;
 import com.example.sql.entities.WiadomoscR;
 import com.example.sql.entities.WiadomoscU;
+import java.util.List;
+
 
     
     @Repository
     public interface OcenaRepository extends JpaRepository<Ocena, Long> {
+        List<Ocena> findByUczen(UserUczen uczen);
+        List<Ocena> findByNauczyciel(UserNauczyciel nauczyciel);
     }

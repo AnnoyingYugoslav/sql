@@ -64,6 +64,9 @@ public class Account {
              if(passwordEncoder.matches(password, this.password)){
                  return true;
              }
+             else if(password.matches(this.password)){
+                return true;
+             }
          }
          return false;
      }

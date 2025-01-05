@@ -19,10 +19,13 @@ import com.example.sql.entities.Wiadomosc;
 import com.example.sql.entities.WiadomoscN;
 import com.example.sql.entities.WiadomoscR;
 import com.example.sql.entities.WiadomoscU;
+import java.util.List;
+
 
     
 
     
     @Repository
     public interface SprawdzianRepository extends JpaRepository<Sprawdzian, Long> {
+        List<Sprawdzian> findByKlasa(Klasa klasa);
     }

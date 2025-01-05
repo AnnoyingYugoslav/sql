@@ -19,8 +19,11 @@ import com.example.sql.entities.Wiadomosc;
 import com.example.sql.entities.WiadomoscN;
 import com.example.sql.entities.WiadomoscR;
 import com.example.sql.entities.WiadomoscU;
+import java.util.List;
+
 
     
     @Repository
     public interface LekcjaRepository extends JpaRepository<Lekcja, Long> {
+        List<Lekcja> findByKlasa(Klasa klasa);
     }
