@@ -23,7 +23,7 @@ public class Sprawdzian {
     @JoinColumn(name = "id_sali", nullable = false)
     private Sala sala;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_klasy", nullable = false)
     private Klasa klasa;
 

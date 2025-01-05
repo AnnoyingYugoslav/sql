@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,8 @@ import com.example.sql.entities.*;
 import com.example.sql.repositories.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.transaction.Transactional;
 
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -83,6 +86,7 @@ public class ApiController {
         }
     }
             
+    @Transactional
     @PostMapping("/login")
     public String loginUser(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password -> 1: True 2: Naucz (true, false) 3: Rodzic (true, false) 4: uczen(true, false)
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -104,7 +108,7 @@ public class ApiController {
         return convertMapToJson(toReturn);
     }
     
-
+    @Transactional
     @PostMapping("/add-ocena")
     public String addOcena(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password 3: Id ucznia 4: ocena (wartość) 5: przedmiot id 6: opis-> 1: true/false
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -151,7 +155,7 @@ public class ApiController {
             return convertMapToJson(toReturn);
         }
     }
-
+    @Transactional
     @PutMapping("/edit-ocena/{id}") //id - id oceny
     public String editOcena(@PathVariable Long id, @RequestBody Map<Integer, Object> newMapData) { //1: login 2:password 3: ocena wartość nowa -> 1: true/false
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -190,7 +194,8 @@ public class ApiController {
             return convertMapToJson(toReturn);
         }
     }
-    
+
+    @Transactional
     @DeleteMapping("/remove-ocena/{id}")
     public String removeOcena(@PathVariable Long id, @RequestBody Map<Integer, Object> newMapData){ //1:login 2:password -> true, false
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -225,6 +230,7 @@ public class ApiController {
         }
     }
 
+    @Transactional
     @PostMapping("/add-sprawdzian")
     public String addSprawdzian(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password 3: Id Klasy 4: Przedmiot Id 5: Dzien String(DD.MM.YYYY) 6: Sala Id 7: String kategoria 8: godzina (HH:MM)-> 1: true/false
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -281,6 +287,7 @@ public class ApiController {
         }
     }
 
+    @Transactional
     @PutMapping("/edit-sprawdzian/{id}")//id - id sprawdzianu
     public String editSprawdzian(@PathVariable String id, @RequestBody Map<Integer, Object> newMapData) { //1: login 2:password 3: Id klasy 4: id przedmiotu 5: Dzien String(DD.MM.YYYY) 6: id sala 7: nowa kategoria 8: godzina (HH:MM)-> 1: true/false
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -348,6 +355,7 @@ public class ApiController {
         }
     }
 
+    @Transactional
     @DeleteMapping("/remove-sprawdzian/{id}")
     public String removeSprawdzian(@PathVariable Long id, @RequestBody Map<Integer, Object> newMapData){ //1: logi 2:password -> true/false
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -382,6 +390,7 @@ public class ApiController {
         }
     }
 
+    @Transactional
     @PostMapping("/get-klasy")
     public String getKlasy(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password -> 1:true false, rest... GOOD LUCK
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -411,7 +420,8 @@ public class ApiController {
             return convertMapToJson(toReturn);
         }
     }
-        
+    
+    @Transactional
     @PostMapping("/get-uczniowie")
     public String getMUczniowieKlasy(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password 3: Id klasy -> 1:true false, rest... GOOD LUCK
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -436,6 +446,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
+            Hibernate.initialize(klasa);
             List<UserUczen> allUserUczen = userUczenRepository.findByKlasa(klasa);
             int i = 2;
             for(UserUczen userUczen:allUserUczen){
@@ -450,6 +461,7 @@ public class ApiController {
         }
     }
     
+    @Transactional
     @PostMapping("/change-password")
     public String changePass(@RequestBody Map<Integer, Object> newMapData) { //1: logn 2: password 3: new password -> 1:true
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -484,6 +496,7 @@ public class ApiController {
         }
     }
     
+    @Transactional
     @PostMapping("/add-uwaga")
     public String addOUwaga(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password 3: Id ucznia 4: tresc -> 1: true/false
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -525,6 +538,7 @@ public class ApiController {
         }
     }
 
+    @Transactional
     @PutMapping("/edit-uwaga/{id}")
     public String editUwaga(@PathVariable String id, @RequestBody Map<Integer, Object> newMapData) { //1: login 2: password 3: Id Uwagi 4: tresc -> 1: true/false
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -560,6 +574,7 @@ public class ApiController {
         }
     }
 
+    @Transactional
     @DeleteMapping("/remove-uwaga/{id}")
     public String removeUwaga(@PathVariable Long id, @RequestBody Map<Integer, Object> newMapData){ //1: logi 2:password -> true/false
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -595,6 +610,7 @@ public class ApiController {
     
     }
 
+    @Transactional
     @PostMapping("/add-leckja")
     public String addLekcja(@RequestBody Map<Integer, Object> newMapData) { //1: lgin 2: password 3: dzien 4: id klasa 5: id sala 6: id nauczyciela 7: time start 8: time end 9: id przedmiot-> true/false
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -659,6 +675,7 @@ public class ApiController {
         }
     }
     
+    @Transactional
     @PutMapping("/edit-lekcja/{id}")
     public String editLekcja(@PathVariable Long id, @RequestBody Map<Integer, Object> newMapData) { //1: lgin 2: password 3: id dzien 4: id klasa 5: id sala 6: id nauczyciela 7: time start 8: time end 9: id przedmiot -> true/false
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -711,11 +728,11 @@ public class ApiController {
 
             Lekcja lekcja = lekcjaRepository.getReferenceById(id);
             lekcja.setDzien(dzien);
-            lekcja.setEnd(godzina2);
+            lekcja.setkongodz(godzina2);
             lekcja.setKlasa(klasa);
             lekcja.setNauczyciel(nauczyciel);
             lekcja.setSala(sala);
-            lekcja.setStart(godzina1);
+            lekcja.setpoczgodz(godzina1);
             lekcja.setPrzedmiot(przedmiot);
 
             Lekcja savedLekcja = lekcjaRepository.save(lekcja);
@@ -732,6 +749,7 @@ public class ApiController {
         }
     }
 
+    @Transactional
     @PostMapping("/get-uwagi-uczen")
     public String getUwagiUczen(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password -> 1: true, flase 2:- rest
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -751,6 +769,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
+            Hibernate.initialize(account.getUserUczen());
             List<Uwaga> allUwaga = uwagaRepository.findByUczen(account.getUserUczen());
             int i = 2;
             toReturn.put(1, true);
@@ -767,6 +786,7 @@ public class ApiController {
         }
     }
     
+    @Transactional
     @PostMapping("/get-uwagi-nauczyciel/{id}") //id uczen you want to look at
     public String getUwagiNau(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) { //1: login 2: password -> 1: true, flase 2:- rest
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -791,6 +811,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
+            Hibernate.initialize(userUczen);
             List<Uwaga> allUwaga = uwagaRepository.findByUczen(userUczen);
             int i = 2;
             toReturn.put(1, true);
@@ -807,6 +828,7 @@ public class ApiController {
         }
     }
 
+    @Transactional
     @PostMapping("/get-uwagi-nauczyciel-all")
     public String getUwagiNauczycuek(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password -> 1: true, flase 2:- rest
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -826,6 +848,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
+            Hibernate.initialize(account.getUserNauczyciel());
             List<Uwaga> allUwaga = uwagaRepository.findByNauczyciel(account.getUserNauczyciel());
             int i = 2;
             toReturn.put(1, true);
@@ -842,6 +865,7 @@ public class ApiController {
         }
     }
 
+    @Transactional
     @PostMapping("/get-oceny-uczen")
     public String getOcenyUczen(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password -> 1: true, flase 2:- rest
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -861,6 +885,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
+            Hibernate.initialize(account.getUserUczen());
             List<Ocena> allOcena = ocenaRepository.findByUczen(account.getUserUczen());
             int i = 2;
             toReturn.put(1, true);
@@ -877,6 +902,7 @@ public class ApiController {
         }
     }
     
+    @Transactional
     @PostMapping("/get-oceny-nauczyciel/{id}") //id uczen you want to look at
     public String getOcenyNau(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) { //1: login 2: password -> 1: true, flase 2:- rest
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -901,6 +927,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
+            Hibernate.initialize(userUczen);
             List<Ocena> allOcena = ocenaRepository.findByUczen(userUczen);
             int i = 2;
             toReturn.put(1, true);
@@ -917,7 +944,8 @@ public class ApiController {
         }
     }
 
-    @PostMapping("/get-sprawdziany-uczen")
+    @Transactional
+    @PostMapping("/get-sprawdzian-uczen")
     public String getSprawdzianyUczen(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password -> 1: true, flase 2:- rest
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
@@ -936,6 +964,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
+            Hibernate.initialize(account.getUserUczen().getKlasa());
             List<Sprawdzian> allSprawdzian = sprawdzianRepository.findByKlasa(account.getUserUczen().getKlasa());
             int i = 2;
             toReturn.put(1, true);
@@ -951,8 +980,8 @@ public class ApiController {
             return convertMapToJson(toReturn);
         }
     }
-    //wiadomości full handling - daj tylko tam, gdzie użytkownik wysłał
 
+    @Transactional
     @PostMapping("/get-sprawdzian-nauczyciel/{id}") //id klasa
     public String getSprawdzianyNau(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) { //1: login 2: password -> 1: true, flase 2:- rest
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -977,6 +1006,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
+            Hibernate.initialize(klasa);
             List<Sprawdzian> allSprawdzian = sprawdzianRepository.findByKlasa(klasa);
             int i = 2;
             toReturn.put(1, true);
@@ -993,6 +1023,7 @@ public class ApiController {
         }
     }
 
+    @Transactional
     @PostMapping("/get-uczen-rodzica")
     public String getUczenByRodzic(@RequestBody Map<Integer, Object> newMapData) { //1:login 2: password -> 1: true 2-ile masz dzieci : id dzieci
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -1012,6 +1043,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
+            Hibernate.initialize(account.getUserRodzic());
             List<Relacja> allRelacja = relacjaRepository.findByUserRodzic(account.getUserRodzic());
             toReturn.put(1, true);
             int i = 2;
@@ -1028,6 +1060,7 @@ public class ApiController {
 
     }
     
+    @Transactional
     @PostMapping("/get-sprawdzian-rodzic/{id}") //id ucznia
     public String getSprawdzianyRodzic(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) { //1: login 2: password -> 1: true, flase 2:- rest
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -1057,6 +1090,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
+            Hibernate.initialize(userUczen.getKlasa());
             List<Sprawdzian> allSprawdzian = sprawdzianRepository.findByKlasa(userUczen.getKlasa());
             int i = 2;
             toReturn.put(1, true);
@@ -1073,6 +1107,7 @@ public class ApiController {
         }
     }
 
+    @Transactional
     @PostMapping("/get-uwagi-rodzic/{id}") //id uczen you want to look at
     public String getUwagiRodzic(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) { //1: login 2: password -> 1: true, flase 2:- rest
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -1102,6 +1137,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
+            Hibernate.initialize(userUczen);
             List<Uwaga> allUwaga = uwagaRepository.findByUczen(userUczen);
             int i = 2;
             toReturn.put(1, true);
@@ -1118,6 +1154,7 @@ public class ApiController {
         }
     }
 
+    @Transactional
     @PostMapping("/get-oceny-rodzic/{id}") //id uczen you want to look at
     public String getOcenyRodzic(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) { //1: login 2: password -> 1: true, flase 2:- rest
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -1147,6 +1184,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
+            Hibernate.initialize(userUczen);
             List<Ocena> allOcena = ocenaRepository.findByUczen(userUczen);
             int i = 2;
             toReturn.put(1, true);
@@ -1163,6 +1201,7 @@ public class ApiController {
         }
     }
     
+    @Transactional
     @PostMapping("/get-lekcja-uczen")
     public String getLekcjaUczen(@RequestBody Map<Integer, Object> newMapData) { //the same
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -1182,6 +1221,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
+            Hibernate.initialize(account.getUserUczen().getKlasa());
             List<Lekcja> allLekcja = lekcjaRepository.findByKlasa(account.getUserUczen().getKlasa());
             int i = 2;
             toReturn.put(1, true);
@@ -1197,6 +1237,7 @@ public class ApiController {
         }
     }
     
+    @Transactional
     @PostMapping("/get-lekcja-rodzic/{id}")
     public String getLekcjaUczen(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) {
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -1226,6 +1267,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
+            Hibernate.initialize(userUczen.getKlasa());
             List<Lekcja> allLekcja = lekcjaRepository.findByKlasa(userUczen.getKlasa());
             int i = 2;
             toReturn.put(1, true);
@@ -1242,6 +1284,7 @@ public class ApiController {
     
     }
 
+    @Transactional
     @PostMapping("/get-lekcja-nauczyciel/{id}") //id klasy!
     public String getLekcjaNauczyciel(@RequestBody Map<Integer, Object> newMapData, @PathVariable Long id) {
         Map<Integer, Object> toReturn = new HashMap<>();
@@ -1266,6 +1309,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
+            Hibernate.initialize(klasa);
             List<Lekcja> allLekcja = lekcjaRepository.findByKlasa(klasa);
             int i = 2;
             toReturn.put(1, true);

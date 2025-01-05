@@ -16,10 +16,10 @@ public class Lekcja {
     private Long id;
 
     @Convert(converter = GodzinaConverter.class)
-    private Godzina start;
+    private Godzina poczgodz;
 
     @Convert(converter = GodzinaConverter.class)
-    private Godzina end;
+    private Godzina kongodz;
 
     @Convert(converter = DzienConverter.class)
     private Dzien dzien;
@@ -40,10 +40,10 @@ public class Lekcja {
     @JoinColumn(name = "przedmiot", nullable = false)
     private Przedmiot przedmiot;
 
-    public Lekcja(Godzina start, Godzina end, Dzien dzien, Klasa klasa, Sala sala, UserNauczyciel nauczyciel,
+    public Lekcja(Godzina poczgodz, Godzina kongodz, Dzien dzien, Klasa klasa, Sala sala, UserNauczyciel nauczyciel,
             Przedmiot przedmiot) {
-        this.start = start;
-        this.end = end;
+        this.poczgodz = poczgodz;
+        this.kongodz = kongodz;
         this.dzien = dzien;
         this.klasa = klasa;
         this.sala = sala;
@@ -62,8 +62,8 @@ public class Lekcja {
     public String toString() {
         return "Lekcja{" +
                 "id=" + id +
-                ", start=" + start +
-                ", end=" + end +
+                ", poczgodz=" + poczgodz +
+                ", kongodz=" + kongodz +
                 ", dzien=" + dzien +
                 ", klasa=" + klasa +
                 ", sala=" + sala +
@@ -93,26 +93,26 @@ public class Lekcja {
 
 
 
-    public Godzina getStart() {
-        return start;
+    public Godzina getpoczgodz() {
+        return poczgodz;
     }
 
 
 
-    public void setStart(Godzina start) {
-        this.start = start;
+    public void setpoczgodz(Godzina poczgodz) {
+        this.poczgodz = poczgodz;
     }
 
 
 
-    public Godzina getEnd() {
-        return end;
+    public Godzina getkongodz() {
+        return kongodz;
     }
 
 
 
-    public void setEnd(Godzina end) {
-        this.end = end;
+    public void setkongodz(Godzina kongodz) {
+        this.kongodz = kongodz;
     }
 
 
