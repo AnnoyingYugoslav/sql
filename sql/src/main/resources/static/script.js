@@ -173,7 +173,7 @@ function getsprawdzianyu() {
         2: PasswordValue
     };
 
-    fetch('/api/get-sprawdziany-uczen', {
+    fetch('/api/get-sprawdzian-uczen', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -187,7 +187,8 @@ function getsprawdzianyu() {
             for (let i = 2; responseData[i] !== undefined; i++) {
                 const sprawdzian = responseData[i];
                 const sprawdzianElement = document.createElement('p');
-                sprawdzianElement.textContent = `${sprawdzian.kategoria}, ${sprawdzian.przedmiot.nazwa} w sali ${sprawdzian.sala.nazwa} z ${sprawdzian.nauczyciel.imie} ${sprawdzian.nauczyciel.nazwisko}`;
+                const Minutes = sprawdzian.godzina.m.toString().padStart(2, '0');
+                sprawdzianElement.textContent = `${sprawdzian.dzien.dzien}-${sprawdzian.dzien.miesiac}-${sprawdzian.dzien.rok} o godzinie ${sprawdzian.godzina.h}:${Minutes} ${sprawdzian.kategoria}, ${sprawdzian.przedmiot.nazwa} w sali ${sprawdzian.sala.nazwa} z ${sprawdzian.nauczyciel.imie} ${sprawdzian.nauczyciel.nazwisko}`;
                 sprawdzianyContainer.appendChild(sprawdzianElement);
             }
         } else {
@@ -220,16 +221,16 @@ function getlekcjeu() {
         console.log("1:", responseData[1]);
         console.log("2:", responseData[2]);
         if (responseData[1]) {
-            // for (let i = 2; responseData[i] !== undefined; i++) {
-            //     const lekcja = responseData[i];
-            //     const lekcjaElement = document.createElement('p');
-            //     lekcjaElement.textContent = `Sprawdzian, ${sprawdzian.przedmiot.nazwa} w sali ${sprawdzian.sala.nazwa} z ${sprawdzian.nauczyciel.imie} ${sprawdzian.nauczyciel.nazwisko}`;
-            //     lekcjaContainer.appendChild(lekcjaElement);
-            // }
+            for (let i = 2; responseData[i] !== undefined; i++) {
+                 const lekcja = responseData[i];
+                 const lekcjaElement = document.createElement('p');
+                 const startMinutes = lekcja.poczgodz.m.toString().padStart(2, '0');
+                 const endMinutes = lekcja.kongodz.m.toString().padStart(2, '0');
+                 lekcjaElement.textContent = `${lekcja.poczgodz.h}:${startMinutes} - ${lekcja.kongodz.h}:${endMinutes} ${lekcja.przedmiot.nazwa} w sali ${lekcja.sala.nazwa}`;
+                 lekcjaContainer.appendChild(lekcjaElement);
+             }
         } else {
-            const noTestsMessage = document.createElement('p');
-            noTestsMessage.textContent = 'Brak sprawdzianów';
-            lekcjaContainer.appendChild(noTestsMessage);
+            lekcjaContainer.textContent = 'Brak sprawdzianów';
         }
     })
     .catch(error => {
@@ -254,21 +255,19 @@ function getuwagiu() {
     })
     .then(response => response.json())
     .then(responseData => {
-        const uwagaContainer = document.getElementById('uwaga');
+        const uwagaContainer = document.getElementById('uwagi');
         console.log("Received data:");
         console.log("1:", responseData[1]);
         console.log("2:", responseData[2]);
         if (responseData[1]) {
-            // for (let i = 2; responseData[i] !== undefined; i++) {
-            //     const lekcja = responseData[i];
-            //     const lekcjaElement = document.createElement('p');
-            //     lekcjaElement.textContent = `Sprawdzian, ${sprawdzian.przedmiot.nazwa} w sali ${sprawdzian.sala.nazwa} z ${sprawdzian.nauczyciel.imie} ${sprawdzian.nauczyciel.nazwisko}`;
-            //     lekcjaContainer.appendChild(lekcjaElement);
-            // }
+             for (let i = 2; responseData[i] !== undefined; i++) {
+                 const uwaga = responseData[i];
+                 const uwagaElement = document.createElement('p');
+                 uwagaElement.textContent = `${uwaga.nauczyciel.imie} ${uwaga.nauczyciel.nazwisko} dnia ${uwaga.dzien.dzien}-${uwaga.dzien.miesiac}-${uwaga.dzien.rok} : ${uwaga.tresc}`;
+                 uwagaContainer.appendChild(uwagaElement);
+             }
         } else {
-            const noTestsMessage = document.createElement('p');
-            noTestsMessage.textContent = 'Brak sprawdzianów';
-            uwagaContainer.appendChild(noTestsMessage);
+            uwagaContainer.textContent = 'Brak uwag';
         }
     })
     .catch(error => {
@@ -293,8 +292,6 @@ function rodzicu() {
     })
     .then(response => response.json())
     .then(responseData => {
-        console.log("Received data:");
-        console.log("1:", responseData[1]);
         if (responseData[1]) {
             const dzieciContainer = document.getElementById('dzieci');
             for (let key in responseData) {
@@ -305,9 +302,10 @@ function rodzicu() {
                     przycisk.dataset.dzieckoId = dziecko.id;
                     przycisk.addEventListener('click', function() {
                         const dzieckoId = przycisk.dataset.dzieckoId;
-                        console.log(`Wybrano dziecko: ${dziecko.imie} ${dziecko.nazwisko}, id: ${dzieckoId}`);
                         getocenyr(dzieckoId);
                         getsprawdzianyr(dzieckoId);
+                        getuwagir(dzieckoId);
+                        getlekcjer(dzieckoId);
                     });
                     dzieciContainer.appendChild(przycisk);
                 }
@@ -398,7 +396,8 @@ function getsprawdzianyr(id) {
             for (let i = 2; responseData[i] !== undefined; i++) {
                 const sprawdzian = responseData[i];
                 const sprawdzianElement = document.createElement('p');
-                sprawdzianElement.textContent = `${sprawdzian.kategoria}, ${sprawdzian.przedmiot.nazwa} w sali ${sprawdzian.sala.nazwa} z ${sprawdzian.nauczyciel.imie} ${sprawdzian.nauczyciel.nazwisko}`;
+                const Minutes = sprawdzian.godzina.m.toString().padStart(2, '0');
+                sprawdzianElement.textContent = `${sprawdzian.dzien.dzien}-${sprawdzian.dzien.miesiac}-${sprawdzian.dzien.rok} o godzinie ${sprawdzian.godzina.h}:${Minutes} ${sprawdzian.kategoria}, ${sprawdzian.przedmiot.nazwa} w sali ${sprawdzian.sala.nazwa} z ${sprawdzian.nauczyciel.imie} ${sprawdzian.nauczyciel.nazwisko}`;
                 sprawdzianyContainer.appendChild(sprawdzianElement);
             }
         } else {
@@ -409,7 +408,84 @@ function getsprawdzianyr(id) {
         console.error('Error:', error);
     });
 }
-//Lekcje i uwagi analogicznie do ucznia, dodać jak będą usunięte błędy
+function getlekcjer(id) {
+    const LoginValue = sessionStorage.getItem('Login');
+    const PasswordValue = sessionStorage.getItem("Password");
+    const data = {
+        1: LoginValue,
+        2: PasswordValue
+    };
+
+    fetch(`/api/get-lekcja-rodzic/${id}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(responseData => {
+        const lekcjaContainer = document.getElementById('lekcje');
+        lekcjaContainer.innerHTML = '';
+        console.log("Received data:");
+        console.log("1:", responseData[1]);
+        console.log("2:", responseData[2]);
+        console.log("3:", responseData[3]);
+        if (responseData[1]) {
+            for (let i = 2; responseData[i] !== undefined; i++) {
+                 const lekcja = responseData[i];
+                 const lekcjaElement = document.createElement('p');
+                 const startMinutes = lekcja.poczgodz.m.toString().padStart(2, '0');
+                 const endMinutes = lekcja.kongodz.m.toString().padStart(2, '0');
+                 lekcjaElement.textContent = `${lekcja.poczgodz.h}:${startMinutes} - ${lekcja.kongodz.h}:${endMinutes} ${lekcja.przedmiot.nazwa} w sali ${lekcja.sala.nazwa}`;
+                 lekcjaContainer.appendChild(lekcjaElement);
+             }
+        } else {
+            lekcjaContainer.textContent = 'Brak lekcji';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+function getuwagir(id) {
+    const LoginValue = sessionStorage.getItem('Login');
+    const PasswordValue = sessionStorage.getItem("Password");
+    const data = {
+        1: LoginValue,
+        2: PasswordValue
+    };
+
+    fetch(`/api/get-uwagi-rodzic/${id}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(responseData => {
+        const uwagaContainer = document.getElementById('uwagi');
+        uwagaContainer.innerHTML = '';
+        console.log("Received data:");
+        console.log("1:", responseData[1]);
+        console.log("2:", responseData[2]);
+        console.log("3:", responseData[3]);
+        if (responseData[1]) {
+             for (let i = 2; responseData[i] !== undefined; i++) {
+                 const uwaga = responseData[i];
+                 const uwagaElement = document.createElement('p');
+                 uwagaElement.textContent = `${uwaga.nauczyciel.imie} ${uwaga.nauczyciel.nazwisko} dnia ${uwaga.dzien.dzien}-${uwaga.dzien.miesiac}-${uwaga.dzien.rok} : ${uwaga.tresc}`;
+                 uwagaContainer.appendChild(uwagaElement);
+             }
+        } else {
+            uwagaContainer.textContent = 'Brak uwag';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
 
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -417,4 +493,40 @@ const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.has('success')) {
     const infoElement = document.getElementById('info');
     infoElement.innerText = 'Hasło zostało zmienione';
+}
+if (urlParams.has('success2')) {
+    const infoElement = document.getElementById('info');
+    infoElement.innerText = 'Dodano ocenę';
+}
+if (urlParams.has('success3')) {
+    const infoElement = document.getElementById('info');
+    infoElement.innerText = 'Dodano uwagę';
+}
+if (urlParams.has('success4')) {
+    const infoElement = document.getElementById('info');
+    infoElement.innerText = 'Ocena została zedytowana';
+}
+if (urlParams.has('success5')) {
+    const infoElement = document.getElementById('info');
+    infoElement.innerText = 'Ocena została usunięta';
+}
+if (urlParams.has('success6')) {
+    const infoElement = document.getElementById('info');
+    infoElement.innerText = 'Uwaga została zedytowana';
+}
+if (urlParams.has('success7')) {
+    const infoElement = document.getElementById('info');
+    infoElement.innerText = 'Uwaga została usunięta';
+}
+if (urlParams.has('success8')) {
+    const infoElement = document.getElementById('info');
+    infoElement.innerText = 'Dodano sprawdzian';
+}
+if (urlParams.has('success9')) {
+    const infoElement = document.getElementById('info');
+    infoElement.innerText = 'Edytowano sprawdzian';
+}
+if (urlParams.has('success10')) {
+    const infoElement = document.getElementById('info');
+    infoElement.innerText = 'Usunięto sprawdzian';
 }

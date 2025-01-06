@@ -447,6 +447,7 @@ public class ApiController {
                 return convertMapToJson(toReturn);
             }
             Hibernate.initialize(klasa);
+            toReturn.put(1, true);
             List<UserUczen> allUserUczen = userUczenRepository.findByKlasa(klasa);
             int i = 2;
             for(UserUczen userUczen:allUserUczen){

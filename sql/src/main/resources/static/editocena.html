@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Edytuj ocenę</title>
+</head>
+<body>
+    <h1>Edytuj ocenę</h1>
+    <form id="ocenaForm">
+        <label for="ocena">Ocena:</label>
+        <select id="ocena" name="ocena" required>
+            <option value="" disabled selected>Wybierz ocenę...</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+        </select>
+    </form>
+    <button type="button" onclick="editocena()">Zapisz zmiany</button>
+    <button type="button" onclick="removeocena()">Usuń ocenę</button>
+    <a href="uczenlookup.html">
+        <button type="button">Powrót</button>
+    </a>
+    <script src="scriptn.js"></script>
+    <script>
+        window.onload = function() {
+        const ocenaValue = sessionStorage.getItem('Ocena');
+        document.getElementById('ocena').value = ocenaValue;
+    }
+    </script>
+</body>
+</html>

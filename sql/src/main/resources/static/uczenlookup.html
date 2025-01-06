@@ -2,43 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Strona ucznia</title>
+    <title>Dane ucznia</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="witaj">
-        <h1>Strona ucznia</h1>
+        <h1>Dane ucznia</h1>
       </div>
     <div id="srodek">
         <h1>Oceny</h1>
         <div id="oceny">
         </div>
-        <h1>Sprawdziany</h1>
-        <div id="sprawdziany">
-        </div>
-        <h1>Lekcje</h1>
-        <div id="lekcje">
-        </div>
+        <a href="addocena.html">
+            <button type="button">Dodaj ocenę</button>
+        </a>
         <h1>Uwagi</h1>
         <div id="uwagi">
         </div>
+        <a href="adduwaga.html">
+            <button type="button">Dodaj uwagę</button>
+        </a>
     </div>
     <div id="info">
     </div>
     <footer>
-        <a href="chpswd.html">
-            <button type="button">Zmień hasło</button>
+        <a href="nauczyciel.html">
+            <button type="button">Powrót</button>
         </a>
-        <button type="button" onclick="logout()">Wyloguj</button>
     </footer>
     <script src="script.js" defer>
     </script>
+    <script src="scriptn.js" defer>
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            getocenyu();
-            getsprawdzianyu();
-            getlekcjeu()
-            getuwagiu()
+            getocenyn();
+            getuwagin();
         });
     </script>
 </body>

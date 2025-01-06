@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edytowanie sprawdzianu</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Edytuj sprawdzian</h1>
+    </header>
+    <main>
+    <form class="upload">
+        <p id="klasa"></p>
+        <label for="subject">Przedmiot:</label>
+        <select id="subject" name="subject" required>
+            <option value="" disabled selected>Wybierz przedmiot...</option>
+            <option value="1">Fizyka</option>
+            <option value="2">Chemia</option>
+        </select>
+        <br>
+        <label for="day">dzień:</label>
+        <textarea id="day" name="description">DD.MM.YYYY</textarea>
+        <br>
+        <label for="day">sala:</label>
+        <select id="sala" name="sala" required>
+            <option value="" disabled selected>Wybierz salę...</option>
+            <option value="1">15</option>
+        </select>
+        <br>
+        <label for="description">Kategoria:</label>
+        <textarea id="description" name="description"></textarea>
+        <br>
+        <label for="time">Godzina:</label>
+        <input type="time" id="time" name="time">
+        <br>
+        <button type="button" onclick="editsprawdzian()">Edytuj sprawdzian</button>
+        <button type="button" onclick="removesprawdzian()">Usuń sprawdzian</button>
+        <a href="nauczyciel.html">
+            <button type="button">Powrót</button>
+        </a>
+    </form>
+    </main>
+    <script src="scriptn.js"></script>
+    <script>
+        window.onload = function() {
+        const klasaValue = sessionStorage.getItem('KlasaNazwa');
+        document.getElementById('klasa').textContent = 'Edytujesz sprawdzian dla klasy ' + klasaValue;
+        document.getElementById('subject').value = sessionStorage.getItem('SprawdzianPrzedmiot');
+        document.getElementById('day').value = sessionStorage.getItem('SprawdzianDzien') + "." + sessionStorage.getItem('SprawdzianMiesiac') + "." + sessionStorage.getItem('SprawdzianRok');
+        document.getElementById('sala').value = sessionStorage.getItem('SprawdzianSala');
+        document.getElementById('description').value = sessionStorage.getItem('SprawdzianKat');
+        document.getElementById('time').value = sessionStorage.getItem('SprawdzianGodz') + ':' + sessionStorage.getItem('SprawdzianMin');
+    }
+    </script>
+</body>
+</html>

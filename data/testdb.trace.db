@@ -1903,3 +1903,115 @@ The object is already closed [90007-214]
 2025-01-05 22:29:26 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
 The object is already closed [90007-214]
+2025-01-06 11:12:54 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "UPDATE USER_UCZEN\000d\000aSET imie = JAN, NAZWISKO = Nowak, ID_KLASY = 2, [*]...\000d\000aWHERE ID=2"; oczekiwano "identifier"
+Syntax error in SQL statement "UPDATE USER_UCZEN\000d\000aSET imie = JAN, NAZWISKO = Nowak, ID_KLASY = 2, [*]...\000d\000aWHERE ID=2"; expected "identifier"; SQL statement:
+UPDATE USER_UCZEN
+SET imie = JAN, NAZWISKO = Nowak, ID_KLASY = 2, ...
+WHERE ID=2 [42001-214]
+2025-01-06 11:13:07 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "UPDATE USER_UCZEN\000d\000aSET imie = 'JAN', NAZWISKO = 'Nowak', ID_KLASY = 2, [*]...\000d\000aWHERE ID=2"; oczekiwano "identifier"
+Syntax error in SQL statement "UPDATE USER_UCZEN\000d\000aSET imie = 'JAN', NAZWISKO = 'Nowak', ID_KLASY = 2, [*]...\000d\000aWHERE ID=2"; expected "identifier"; SQL statement:
+UPDATE USER_UCZEN
+SET imie = 'JAN', NAZWISKO = 'Nowak', ID_KLASY = 2, ...
+WHERE ID=2 [42001-214]
+2025-01-06 11:13:18 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "UPDATE USER_UCZEN\000d\000aSET imie = 'JAN', NAZWISKO = 'Nowak', ID_KLASY = 2,\000d\000a[*]WHERE ID=2"; oczekiwano "identifier"
+Syntax error in SQL statement "UPDATE USER_UCZEN\000d\000aSET imie = 'JAN', NAZWISKO = 'Nowak', ID_KLASY = 2,\000d\000a[*]WHERE ID=2"; expected "identifier"; SQL statement:
+UPDATE USER_UCZEN
+SET imie = 'JAN', NAZWISKO = 'Nowak', ID_KLASY = 2,
+WHERE ID=2 [42001-214]
+2025-01-06 11:13:33 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "UPDATE USER_UCZEN\000d\000aSET imie = 'Jan',\000d\000a[*]WHERE ID=2"; oczekiwano "identifier"
+Syntax error in SQL statement "UPDATE USER_UCZEN\000d\000aSET imie = 'Jan',\000d\000a[*]WHERE ID=2"; expected "identifier"; SQL statement:
+UPDATE USER_UCZEN
+SET imie = 'Jan',
+WHERE ID=2 [42001-214]
+2025-01-06 11:20:24 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "[*]SPRAWDZIAN"; oczekiwano "SAVEPOINT, SCRIPT, SHUTDOWN, SHOW"
+Syntax error in SQL statement "[*]SPRAWDZIAN"; expected "SAVEPOINT, SCRIPT, SHUTDOWN, SHOW"; SQL statement:
+SPRAWDZIAN [42001-214]
+2025-01-06 11:21:19 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "[*]INSER INTO SPRAWDZIAN (ID, ID_KLASY, ID_NAUCZYCIELA, ID_PRZEDMIOTU, ID_SALI, KATEGORIA, DZIEN, GODZINA) VALUES (2,2,1,2,1,'Sprawdzian','2025-02-22','13:00')"; oczekiwano "INSERT"
+Syntax error in SQL statement "[*]INSER INTO SPRAWDZIAN (ID, ID_KLASY, ID_NAUCZYCIELA, ID_PRZEDMIOTU, ID_SALI, KATEGORIA, DZIEN, GODZINA) VALUES (2,2,1,2,1,'Sprawdzian','2025-02-22','13:00')"; expected "INSERT"; SQL statement:
+INSER INTO SPRAWDZIAN (ID, ID_KLASY, ID_NAUCZYCIELA, ID_PRZEDMIOTU, ID_SALI, KATEGORIA, DZIEN, GODZINA) VALUES (2,2,1,2,1,'Sprawdzian','2025-02-22','13:00') [42001-214]
+2025-01-06 11:24:37 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "[*]INSER INTO LEKCJA VALUES (ID, DZIEN, KONGODZ, POCZGODZ, ID_KLASY, ID_NAUCZYCIELA, PRZEDMIOT, ID_SALI) VALUES (2,'Poniedziałek','8:45','8:00',2,2,2,1)"; oczekiwano "INSERT"
+Syntax error in SQL statement "[*]INSER INTO LEKCJA VALUES (ID, DZIEN, KONGODZ, POCZGODZ, ID_KLASY, ID_NAUCZYCIELA, PRZEDMIOT, ID_SALI) VALUES (2,'Poniedziałek','8:45','8:00',2,2,2,1)"; expected "INSERT"; SQL statement:
+INSER INTO LEKCJA VALUES (ID, DZIEN, KONGODZ, POCZGODZ, ID_KLASY, ID_NAUCZYCIELA, PRZEDMIOT, ID_SALI) VALUES (2,'Poniedziałek','8:45','8:00',2,2,2,1) [42001-214]
+2025-01-06 11:24:44 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "INSERT INTO LEKCJA VALUES (ID, DZIEN, KONGODZ, POCZGODZ, ID_KLASY, ID_NAUCZYCIELA, PRZEDMIOT, ID_SALI) [*]VALUES (2,'Poniedziałek','8:45','8:00',2,2,2,1)"
+Syntax error in SQL statement "INSERT INTO LEKCJA VALUES (ID, DZIEN, KONGODZ, POCZGODZ, ID_KLASY, ID_NAUCZYCIELA, PRZEDMIOT, ID_SALI) [*]VALUES (2,'Poniedziałek','8:45','8:00',2,2,2,1)"; SQL statement:
+INSERT INTO LEKCJA VALUES (ID, DZIEN, KONGODZ, POCZGODZ, ID_KLASY, ID_NAUCZYCIELA, PRZEDMIOT, ID_SALI) VALUES (2,'Poniedziałek','8:45','8:00',2,2,2,1) [42000-214]
+2025-01-06 12:33:45 jdbc[16]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
+The object is already closed [90007-214]
+2025-01-06 12:52:22 jdbc[25]: null
+org.h2.message.DbException: Połączenie zostało zamknięte przez aplikacje i zostało usunięte przez kolektor nieużytków
+The connection was not closed by the application and is garbage collected [90018-214]
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.message.DbException.get(DbException.java:188)
+	at org.h2.jdbc.JdbcConnection.closeOld(JdbcConnection.java:190)
+	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:132)
+	at org.h2.Driver.connect(Driver.java:59)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:359)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:201)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:470)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:733)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:712)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.h2.jdbc.JdbcSQLNonTransientConnectionException: Połączenie zostało zamknięte przez aplikacje i zostało usunięte przez kolektor nieużytków
+The connection was not closed by the application and is garbage collected [90018-214]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:678)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:477)
+	... 16 more
+2025-01-06 12:52:38 jdbc[15]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
+The object is already closed [90007-214]
+2025-01-06 12:53:48 jdbc[27]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
+The object is already closed [90007-214]
+2025-01-06 13:38:49 jdbc[35]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
+The object is already closed [90007-214]
+2025-01-06 14:05:55 jdbc[46]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
+The object is already closed [90007-214]
+2025-01-06 14:33:07 jdbc[55]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
+The object is already closed [90007-214]
+2025-01-06 14:33:54 jdbc[56]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
+The object is already closed [90007-214]
+2025-01-06 14:39:54 jdbc[57]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
+The object is already closed [90007-214]
+2025-01-06 14:45:25 jdbc[55]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
+The object is already closed [90007-214]
+2025-01-06 14:54:37 jdbc[65]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
+The object is already closed [90007-214]
+2025-01-06 14:58:36 jdbc[67]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
+The object is already closed [90007-214]
+2025-01-06 15:10:30 jdbc[66]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
+The object is already closed [90007-214]
+2025-01-06 15:17:27 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
+The object is already closed [90007-214]
+2025-01-06 15:20:48 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
+The object is already closed [90007-214]
+2025-01-06 15:22:20 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
+The object is already closed [90007-214]
+2025-01-06 15:25:08 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
+The object is already closed [90007-214]

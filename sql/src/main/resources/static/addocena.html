@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dodawanie oceny</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Dodaj ocenę</h1>
+    </header>
+    <main>
+    <form class="upload">
+        <label for="subject">Przedmiot:</label>
+        <select id="subject" name="subject" required>
+            <option value="" disabled selected>Wybierz przedmiot...</option>
+            <option value="1">Fizyka</option>
+            <option value="2">Chemia</option>
+        </select>
+        <br>
+        <label for="grade">Ocena:</label>
+        <select id="grade" name="grade" required>
+            <option value="" disabled selected>Wybierz ocenę...</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+        </select>
+        <br>
+        <label for="description">Opis:</label>
+        <textarea id="description" name="description"></textarea>
+        <button type="button" onclick="addocena()">Dodaj ocenę</button>
+        <a href="uczenlookup.html">
+            <button type="button">Powrót</button>
+        </a>
+    </form>
+    </main>
+    <script src="scriptn.js"></script>
+</body>
+</html>
