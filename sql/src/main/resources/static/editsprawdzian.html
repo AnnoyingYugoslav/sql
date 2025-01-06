@@ -20,7 +20,7 @@
         </select>
         <br>
         <label for="day">dzień:</label>
-        <textarea id="day" name="description">DD.MM.YYYY</textarea>
+        <input type="date" id="day" name="date">
         <br>
         <label for="day">sala:</label>
         <select id="sala" name="sala" required>
@@ -36,10 +36,13 @@
         <br>
         <button type="button" onclick="editsprawdzian()">Edytuj sprawdzian</button>
         <button type="button" onclick="removesprawdzian()">Usuń sprawdzian</button>
+
+    </form>
+    <footer>
         <a href="nauczyciel.html">
             <button type="button">Powrót</button>
         </a>
-    </form>
+    </footer>
     </main>
     <script src="scriptn.js"></script>
     <script>
@@ -47,7 +50,7 @@
         const klasaValue = sessionStorage.getItem('KlasaNazwa');
         document.getElementById('klasa').textContent = 'Edytujesz sprawdzian dla klasy ' + klasaValue;
         document.getElementById('subject').value = sessionStorage.getItem('SprawdzianPrzedmiot');
-        document.getElementById('day').value = sessionStorage.getItem('SprawdzianDzien') + "." + sessionStorage.getItem('SprawdzianMiesiac') + "." + sessionStorage.getItem('SprawdzianRok');
+        document.getElementById('day').value = sessionStorage.getItem('SprawdzianRok') + '-' + sessionStorage.getItem('SprawdzianMiesiac') + '-' + sessionStorage.getItem('SprawdzianDzien');
         document.getElementById('sala').value = sessionStorage.getItem('SprawdzianSala');
         document.getElementById('description').value = sessionStorage.getItem('SprawdzianKat');
         document.getElementById('time').value = sessionStorage.getItem('SprawdzianGodz') + ':' + sessionStorage.getItem('SprawdzianMin');

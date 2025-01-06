@@ -124,15 +124,12 @@ function getuczniowie(id) {
                 const uczenElement = document.createElement('div');
                 const uczenText = document.createElement('span');
                 uczenText.textContent = `${uczen.imie} ${uczen.nazwisko}`;
-                uczenElement.appendChild(uczenText);
-                const detailsButton = document.createElement('button');
-                detailsButton.textContent = 'Szczegóły';
-                detailsButton.addEventListener('click', () => {
+                uczenText.style.cursor = "pointer";
+                uczenText.addEventListener('click', () => {
                     sessionStorage.setItem('UczenId', uczen.id);
                     window.location.href = 'uczenlookup.html';
                 });
-
-                uczenElement.appendChild(detailsButton);
+                uczenElement.appendChild(uczenText);
                 uczenContainer.appendChild(uczenElement);
             }
         } else {
@@ -494,13 +491,15 @@ function addsprawdzian() {
     const Room = document.getElementById('sala').value;
     const description = document.getElementById('description').value;
     const Time = document.getElementById('time').value;
-
+    const [year, month, day] = Day.split('-');
+    const formattedDate = `${day}.${month}.${year}`; 
+    console.log(formattedDate);
     const data = {
         1: LoginValue,
         2: PasswordValue,
         3: id,
         4: Subject,
-        5: Day,
+        5: formattedDate,
         6: Room,
         7: description,
         8: Time
@@ -518,7 +517,7 @@ function addsprawdzian() {
     .then(responseData => {
         console.log("Received data:");
         console.log("1:", responseData[0]);
-        //document.location.href="nauczyciel.html?success8=true";
+        document.location.href="nauczyciel.html?success8=true";
     })
     .catch(error => {
         console.error('Error:', error);
@@ -533,12 +532,15 @@ function editsprawdzian() {
     const Room = document.getElementById('sala').value;
     const description = document.getElementById('description').value;
     const Time = document.getElementById('time').value;
+    const [year, month, day] = Day.split('-');
+    const formattedDate = `${day}.${month}.${year}`; 
+    console.log(formattedDate);
     const data = {
         1: LoginValue,
         2: PasswordValue,
         3: id,
         4: Subject,
-        5: Day,
+        5: formattedDate,
         6: Room,
         7: description,
         8: Time
@@ -555,7 +557,7 @@ function editsprawdzian() {
     .then(responseData => {
         console.log("Received data:");
         console.log("1:", responseData[1]);
-        //document.location.href="nauczyciel.html?success9=true";
+        document.location.href="nauczyciel.html?success9=true";
     })
     .catch(error => {
         console.error('Error:', error);

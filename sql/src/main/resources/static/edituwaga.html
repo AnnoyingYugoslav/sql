@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Edytuj uwagę</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>Edytuj uwagę</h1>
-    <form id="uwagaForm">
+    <form id="uwagaForm" class="upload">
         <label for="uwaga">Opis:</label>
         <textarea id="uwaga" name="description"></textarea>
+        <button type="button" onclick="edituwaga()">Zapisz zmiany</button>
+        <button type="button" onclick="removeuwaga()">Usuń uwagę</button>
     </form>
-    <button type="button" onclick="edituwaga()">Zapisz zmiany</button>
-    <button type="button" onclick="removeuwaga()">Usuń uwagę</button>
+    <footer>
     <a href="uczenlookup.html">
         <button type="button">Powrót</button>
     </a>
+    </footer>
     <script src="scriptn.js"></script>
     <script>
         window.onload = function() {
