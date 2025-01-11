@@ -159,15 +159,40 @@ function getlekcjen(id) {
     .then(responseData => {
         const lekcjaContainer = document.getElementById('lekcje');
         lekcjaContainer.innerHTML = '';
+        console.log("Received data:");
+        console.log("1:", responseData[1]);
+        console.log("2:", responseData[2]);
+
         if (responseData[1]) {
+            const lekcjeGroupedByDay = {};
+
             for (let i = 2; responseData[i] !== undefined; i++) {
-                 const lekcja = responseData[i];
-                 const lekcjaElement = document.createElement('p');
-                 const startMinutes = lekcja.poczgodz.m.toString().padStart(2, '0');
-                 const endMinutes = lekcja.kongodz.m.toString().padStart(2, '0');
-                 lekcjaElement.textContent = `${lekcja.poczgodz.h}:${startMinutes} - ${lekcja.kongodz.h}:${endMinutes} ${lekcja.przedmiot.nazwa} w sali ${lekcja.sala.nazwa}`;
-                 lekcjaContainer.appendChild(lekcjaElement);
-             }
+                const lekcja = responseData[i];
+                const dzienTygodnia = lekcja.dzTyg;
+
+                if (!lekcjeGroupedByDay[dzienTygodnia]) {
+                    lekcjeGroupedByDay[dzienTygodnia] = [];
+                }
+
+                lekcjeGroupedByDay[dzienTygodnia].push(lekcja);
+            }
+
+            const dniTygodnia = ["poniedziałek", "wtorek", "środa", "czwartek", "piątek"];
+            dniTygodnia.forEach(dzien => {
+                const lekcjeWDniu = lekcjeGroupedByDay[dzien];
+                if (lekcjeWDniu) {
+                    const dzienElement = document.createElement('h3');
+                    dzienElement.textContent = dzien.charAt(0).toUpperCase() + dzien.slice(1);
+                    lekcjaContainer.appendChild(dzienElement);
+                    lekcjeWDniu.forEach(lekcja => {
+                        const lekcjaElement = document.createElement('p');
+                        const startMinutes = lekcja.poczgodz.m.toString().padStart(2, '0');
+                        const endMinutes = lekcja.kongodz.m.toString().padStart(2, '0');
+                        lekcjaElement.textContent = `${lekcja.poczgodz.h}:${startMinutes} - ${lekcja.kongodz.h}:${endMinutes} ${lekcja.przedmiot.nazwa} w sali ${lekcja.sala.nazwa}`;
+                        lekcjaContainer.appendChild(lekcjaElement);
+                    });
+                }
+            });
         } else {
             lekcjaContainer.textContent = 'Brak lekcji';
         }

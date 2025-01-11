@@ -24,7 +24,7 @@ public class Wiadomosc {
     @Convert(converter = DzienConverter.class)
     private Dzien dzien;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "nadawca", nullable = true)
     private Account account;
 

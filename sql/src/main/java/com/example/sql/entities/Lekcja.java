@@ -97,20 +97,8 @@ public class Lekcja {
 
 
 
-    public Godzina getpoczgodz() {
-        return poczgodz;
-    }
-
-
-
     public void setpoczgodz(Godzina poczgodz) {
         this.poczgodz = poczgodz;
-    }
-
-
-
-    public Godzina getkongodz() {
-        return kongodz;
     }
 
 
