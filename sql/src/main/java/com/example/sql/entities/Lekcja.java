@@ -32,6 +32,9 @@ public class Lekcja {
     @JoinColumn(name = "id_sali", nullable = false)
     private Sala sala;
 
+    @Column(name = "dzien_tyodnia", nullable = false)
+    private String dzTyg;
+
     @ManyToOne
     @JoinColumn(name = "id_nauczyciela", nullable = false)
     private UserNauczyciel nauczyciel;
@@ -41,7 +44,7 @@ public class Lekcja {
     private Przedmiot przedmiot;
 
     public Lekcja(Godzina poczgodz, Godzina kongodz, Dzien dzien, Klasa klasa, Sala sala, UserNauczyciel nauczyciel,
-            Przedmiot przedmiot) {
+            Przedmiot przedmiot, String dzienTyg) {
         this.poczgodz = poczgodz;
         this.kongodz = kongodz;
         this.dzien = dzien;
@@ -49,6 +52,7 @@ public class Lekcja {
         this.sala = sala;
         this.nauczyciel = nauczyciel;
         this.przedmiot = przedmiot;
+        this.dzTyg = dzienTyg;
     }
 
 
@@ -161,5 +165,41 @@ public class Lekcja {
 
     public void setNauczyciel(UserNauczyciel nauczyciel) {
         this.nauczyciel = nauczyciel;
+    }
+
+
+
+    public Godzina getPoczgodz() {
+        return poczgodz;
+    }
+
+
+
+    public void setPoczgodz(Godzina poczgodz) {
+        this.poczgodz = poczgodz;
+    }
+
+
+
+    public Godzina getKongodz() {
+        return kongodz;
+    }
+
+
+
+    public void setKongodz(Godzina kongodz) {
+        this.kongodz = kongodz;
+    }
+
+
+
+    public String getDzTyg() {
+        return dzTyg;
+    }
+
+
+
+    public void setDzTyg(String dzTyg) {
+        this.dzTyg = dzTyg;
     }
 }

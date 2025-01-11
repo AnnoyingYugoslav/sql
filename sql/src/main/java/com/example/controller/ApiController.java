@@ -614,7 +614,7 @@ public class ApiController {
 
     @Transactional
     @PostMapping("/add-leckja")
-    public String addLekcja(@RequestBody Map<Integer, Object> newMapData) { //1: lgin 2: password 3: dzien 4: id klasa 5: id sala 6: id nauczyciela 7: time start 8: time end 9: id przedmiot-> true/false
+    public String addLekcja(@RequestBody Map<Integer, Object> newMapData) { //1: lgin 2: password 3: dzien 4: id klasa 5: id sala 6: id nauczyciela 7: time start 8: time end 9: id przedmiot 10: dzien tygodnia-> true/false
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
             String login = newMapData.get(1).toString();
@@ -662,7 +662,7 @@ public class ApiController {
             Godzina godzina1 = new Godzina(time1.getHour(), time1.getMinute());
             Godzina godzina2 = new Godzina(time2.getHour(), time2.getMinute());
 
-            Lekcja lekcja = new Lekcja(godzina1,godzina2, dzien, klasa, sala, nauczyciel, przedmiot);
+            Lekcja lekcja = new Lekcja(godzina1,godzina2, dzien, klasa, sala, nauczyciel, przedmiot, newMapData.get(10).toString());
             Lekcja savedLekcja = lekcjaRepository.save(lekcja);
             if(!(savedLekcja instanceof Lekcja)){
                 toReturn.put(1, false);
