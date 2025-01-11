@@ -1,5 +1,8 @@
 package com.example.sql.entities;
 
+import com.example.sql.converters.DzienConverter;
+import com.example.sql.converters.GodzinaConverter;
+
 import jakarta.persistence.*;
 @Entity
 @Table(name = "wiadomosc")
@@ -15,18 +18,30 @@ public class Wiadomosc {
     @Column(name = "tresc", nullable = false, columnDefinition = "TEXT")
     private String tresc;
 
+    @Convert(converter = GodzinaConverter.class)
+    private Godzina godz;
+
+    @Convert(converter = DzienConverter.class)
+    private Dzien dzien;
+
+    @OneToMany
+    @JoinColumn(name = "nadawca", nullable = true)
+    private Account account;
 
     @Lob //LOB czy BLOB ?
     @Column(name = "zalaczniki")
     private byte[] zalaczniki;
 
-    public Wiadomosc() {
-    }
-
-    public Wiadomosc(String tytul, String tresc, Dzien data, byte[] zalaczniki) {
+    public Wiadomosc(String tytul, String tresc, Godzina godz, Dzien dzien, byte[] zalaczniki, Account account) {
         this.tytul = tytul;
         this.tresc = tresc;
+        this.godz = godz;
+        this.dzien = dzien;
         this.zalaczniki = zalaczniki;
+        this.account = account;
+    }
+
+    public Wiadomosc() {
     }
 
     public Long getId() {
@@ -69,5 +84,29 @@ public class Wiadomosc {
                 ", tytul='" + tytul + '\'' +
                 ", tresc='" + tresc + '\'' +
                 '}';
+    }
+
+    public Godzina getGodz() {
+        return godz;
+    }
+
+    public void setGodz(Godzina godz) {
+        this.godz = godz;
+    }
+
+    public Dzien getDzien() {
+        return dzien;
+    }
+
+    public void setDzien(Dzien dzien) {
+        this.dzien = dzien;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }

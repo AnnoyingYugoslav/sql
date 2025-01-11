@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.example.sql.entities.Account;
 import com.example.sql.entities.Dzien;
 import com.example.sql.entities.Klasa;
 import com.example.sql.entities.Lekcja;
@@ -19,8 +20,11 @@ import com.example.sql.entities.Wiadomosc;
 import com.example.sql.entities.WiadomoscN;
 import com.example.sql.entities.WiadomoscR;
 import com.example.sql.entities.WiadomoscU;
+import java.util.List;
+
 
     
     @Repository
     public interface WiadomoscRepository extends JpaRepository<Wiadomosc, Long> {
+        List<Wiadomosc> findByAccount(Account account);
     }

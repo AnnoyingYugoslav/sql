@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.SerializationUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -1254,7 +1255,7 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            if(account.getUserRodzic() == null){ //not a uczen
+            if(account.getUserRodzic() == null){ //not a rodzic
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
@@ -1327,5 +1328,370 @@ public class ApiController {
     
     }
 
+    //create message
+    @PostMapping("/write-message")
+    public String writeMessage(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password 3: tytuł 4: wiadomość 5: godz (format HH:MM) 6: data (format DD.MM.YYYY) 7: załączniki -> 1: true/false 2: id wiadomosci
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){ //is an account
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("HH:mm");
+            LocalDate date = LocalDate.parse(newMapData.get(6).toString(), formatter);
+            LocalTime time = LocalTime.parse(newMapData.get(5).toString(), formatter2);
+
+            Godzina godzina = new Godzina(time.getHour(), time.getMinute());
+            Dzien dzien = new Dzien(date.getYear(), date.getMonthValue(), date.getDayOfMonth());
+            Wiadomosc wiadomosc = new Wiadomosc(newMapData.get(3).toString(),newMapData.get(4).toString(), godzina, dzien, SerializationUtils.serialize(newMapData.get(7)), account);
+            if(!(wiadomosc instanceof Wiadomosc)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Wiadomosc savedWiadomosc = wiadomoscRepository.save(wiadomosc);
+            if(!(savedWiadomosc instanceof Wiadomosc)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            toReturn.put(1, true);
+            toReturn.put(1, savedWiadomosc.getId());
+            return convertMapToJson(toReturn);
+
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+
+    @PostMapping("/send-message/nauczyciel/{id}") //id wiadomości
+    public String sendMsgNauczyciel(@RequestBody Map<Integer, Object> newMapData,@PathVariable Long id) { //1:login 2: password 3: id odbiorcy 4: typ odbiorcy (1 dla rodzic, 2 uczen, 3 nauczyciel) -> 1: true/false
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){ //is an account
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserNauczyciel() == null){ //not a nauczyciel
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Wiadomosc wiadomosc = wiadomoscRepository.getReferenceById(id);
+            if(!(wiadomosc instanceof Wiadomosc)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!wiadomosc.getAccount().equals(account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Long i = Long.parseLong(newMapData.get(4).toString());
+            Long idUser = Long.parseLong(newMapData.get(3).toString());
+            User user;
+            switch(i){
+                case 1L:
+                    user = userRodzicRepository.getReferenceById(idUser);
+                    if(!(user instanceof UserRodzic)){
+                        toReturn.put(1, false);
+                        return convertMapToJson(toReturn);
+                    }
+                    WiadomoscR wiadomoscR = new WiadomoscR(wiadomosc, (UserRodzic)user);
+                    WiadomoscR saveWiadomoscR = wiadomoscRRepository.save(wiadomoscR);
+                    if((saveWiadomoscR instanceof WiadomoscR)){
+                        toReturn.put(1, true);
+                        return convertMapToJson(toReturn);
+                    }
+                    break;
+                case 2L:
+                    user = userUczenRepository.getReferenceById(idUser);
+                    if(!(user instanceof UserUczen)){
+                        toReturn.put(1, false);
+                        return convertMapToJson(toReturn);
+                    }
+                    WiadomoscU wiadomoscU = new WiadomoscU(wiadomosc, (UserUczen)user);
+                    WiadomoscU saveWiadomoscU = wiadomoscURepository.save(wiadomoscU);
+                    if((saveWiadomoscU instanceof WiadomoscU)){
+                        toReturn.put(1, true);
+                        return convertMapToJson(toReturn);
+                    }
+                    break;
+                case 3L:
+                    user = userNauczycielRepository.getReferenceById(idUser);
+                        if(!(user instanceof UserNauczyciel)){
+                            toReturn.put(1, false);
+                            return convertMapToJson(toReturn);
+                        }
+                        WiadomoscN wiadomoscN = new WiadomoscN(wiadomosc, (UserNauczyciel)user);
+                        WiadomoscN saveWiadomoscN = wiadomoscNRepository.save(wiadomoscN);
+                        if((saveWiadomoscN instanceof WiadomoscN)){
+                            toReturn.put(1, true);
+                            return convertMapToJson(toReturn);
+                        }
+                    break;
+                default:
+                    toReturn.put(1, false);
+                    return convertMapToJson(toReturn);
+            }
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+            
+
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+
+    @PostMapping("/send-message/uczen/{id}") //id wiadomości - uczen do nauczyciela tylko moze
+    public String sendMsgUczen(@RequestBody Map<Integer, Object> newMapData,@PathVariable Long id) { //1:login 2: password 3: id odbiorcy ) -> 1: true/false
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){ //is an account
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserUczen() == null){ //not a nauczyciel
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Wiadomosc wiadomosc = wiadomoscRepository.getReferenceById(id);
+            if(!(wiadomosc instanceof Wiadomosc)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!wiadomosc.getAccount().equals(account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Long idUser = Long.parseLong(newMapData.get(3).toString());
+            UserNauczyciel userNauczyciel = userNauczycielRepository.getReferenceById(idUser);
+            if(!(userNauczyciel instanceof UserNauczyciel)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            WiadomoscN wiadomoscN = new WiadomoscN(wiadomosc, userNauczyciel);
+            WiadomoscN saveWiadomoscN = wiadomoscNRepository.save(wiadomoscN);
+            if((saveWiadomoscN instanceof WiadomoscN)){
+                toReturn.put(1, true);
+                return convertMapToJson(toReturn);
+            }
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+    
+    @PostMapping("/send-message/rodzic/{id}") //id wiadomości - uczen do nauczyciela tylko moze
+    public String sendMsgRodzic(@RequestBody Map<Integer, Object> newMapData,@PathVariable Long id) { //1:login 2: password 3: id odbiorcy ) -> 1: true/false
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){ //is an account
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserRodzic() == null){ //not a nauczyciel
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Wiadomosc wiadomosc = wiadomoscRepository.getReferenceById(id);
+            if(!(wiadomosc instanceof Wiadomosc)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!wiadomosc.getAccount().equals(account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Long idUser = Long.parseLong(newMapData.get(3).toString());
+            UserNauczyciel userNauczyciel = userNauczycielRepository.getReferenceById(idUser);
+            if(!(userNauczyciel instanceof UserNauczyciel)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            WiadomoscN wiadomoscN = new WiadomoscN(wiadomosc, userNauczyciel);
+            WiadomoscN saveWiadomoscN = wiadomoscNRepository.save(wiadomoscN);
+            if((saveWiadomoscN instanceof WiadomoscN)){
+                toReturn.put(1, true);
+                return convertMapToJson(toReturn);
+            }
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+
+    @PostMapping("/get-wiadomosci/uczen")
+    public String getWU(@RequestBody Map<Integer, Object> newMapData) {
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){ //is an account
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserUczen() == null){ //not a nauczyciel
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Hibernate.initialize(account.getUserUczen());
+            toReturn.put(1, true);
+            List<WiadomoscU> allW = wiadomoscURepository.findByOdbiorca(account.getUserUczen());
+            int i = 2;
+            for(WiadomoscU wiadomoscU : allW){
+                toReturn.put(i,wiadomoscU);
+                i++;
+            }
+            return convertMapToJson(toReturn);
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+    
+    @PostMapping("/get-wiadomosci/rodzic")
+    public String getWR(@RequestBody Map<Integer, Object> newMapData) {
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){ //is an account
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserRodzic() == null){ //not a nauczyciel
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Hibernate.initialize(account.getUserRodzic());
+            toReturn.put(1, true);
+            List<WiadomoscR> allW = wiadomoscRRepository.findByOdbiorca(account.getUserRodzic());
+            int i = 2;
+            for(WiadomoscR wiadomoscU : allW){
+                toReturn.put(i,wiadomoscU);
+                i++;
+            }
+            return convertMapToJson(toReturn);
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+
+    @PostMapping("/get-wiadomosci/nauczyciel")
+    public String getWN(@RequestBody Map<Integer, Object> newMapData) {
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){ //is an account
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserNauczyciel() == null){ //not a nauczyciel
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Hibernate.initialize(account.getUserNauczyciel());
+            toReturn.put(1, true);
+            List<WiadomoscN> allW = wiadomoscNRepository.findByOdbiorca(account.getUserNauczyciel());
+            int i = 2;
+            for(WiadomoscN wiadomoscU : allW){
+                toReturn.put(i,wiadomoscU);
+                i++;
+            }
+            return convertMapToJson(toReturn);
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+
+    @PostMapping("/get-my-wiadomosci")
+    public String getW(@RequestBody Map<Integer, Object> newMapData) {
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){ //is an account
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            Hibernate.initialize(account);
+            toReturn.put(1, true);
+            List<Wiadomosc> allW = wiadomoscRepository.findByAccount(account);
+            int i = 2;
+            for(Wiadomosc wiadomoscU : allW){
+                toReturn.put(i,wiadomoscU);
+                i++;
+            }
+            return convertMapToJson(toReturn);
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
 }   
 
