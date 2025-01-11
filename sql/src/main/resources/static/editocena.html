@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Edytuj ocenę</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>Edytuj ocenę</h1>
-    <form id="ocenaForm">
+    <form id="ocenaForm" class="upload">
         <label for="ocena">Ocena:</label>
         <select id="ocena" name="ocena" required>
             <option value="" disabled selected>Wybierz ocenę...</option>
@@ -17,12 +18,14 @@
             <option value="5">5</option>
             <option value="6">6</option>
         </select>
+        <button type="button" onclick="editocena()">Zapisz zmiany</button>
+        <button type="button" onclick="removeocena()">Usuń ocenę</button>
     </form>
-    <button type="button" onclick="editocena()">Zapisz zmiany</button>
-    <button type="button" onclick="removeocena()">Usuń ocenę</button>
+    <footer>
     <a href="uczenlookup.html">
         <button type="button">Powrót</button>
     </a>
+    </footer>
     <script src="scriptn.js"></script>
     <script>
         window.onload = function() {
