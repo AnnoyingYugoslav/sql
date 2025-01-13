@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wiadomości</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="witaj">
+        <h1>Wiadomości</h1>
+    </div>
+    <div id="wiadomosci">
+        <div id="msg">
+
+        </div>
+        <div id="details">
+
+        </div>
+    </div>
+    <div id="info">
+    </div>
+    <footer>
+        <a href="addwiadomosc.html">
+            <button type="button">Napisz wiadomośc</button>
+        </a>
+        <button type="button" onclick="returnp()">Powrót</button>
+        <button type="button" onclick="logout()">Wyloguj</button>
+    </footer>
+    <script src="script.js" defer>
+    </script>
+    <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                getwiadomosciu();
+            });
+    </script>
+</body>
+</html>

@@ -151,6 +151,8 @@ function getocenyu() {
                 przedmiotData.forEach(item => {
                     const ocenaDiv = document.createElement('span');
                     ocenaDiv.textContent = `${item.ocena} `;
+                    ocenaDiv.title = item.opis;
+                    ocenaDiv.style.cursor = 'pointer';
                     ocenyDiv.appendChild(ocenaDiv);
                 });
                 row.appendChild(ocenyDiv);
@@ -381,6 +383,8 @@ function getocenyr(id) {
                 przedmiotData.forEach(item => {
                     const ocenaDiv = document.createElement('span');
                     ocenaDiv.textContent = `${item.ocena} `;
+                    ocenaDiv.title = item.opis;
+                    ocenaDiv.style.cursor = 'pointer';
                     ocenyDiv.appendChild(ocenaDiv);
                 });
                 row.appendChild(ocenyDiv);
@@ -448,6 +452,7 @@ function getlekcjer(id) {
     .then(response => response.json())
     .then(responseData => {
         const lekcjaContainer = document.getElementById('lekcje');
+        lekcjaContainer.innerHTML = ' ';
         console.log("Received data:");
         console.log("1:", responseData[1]);
         console.log("2:", responseData[2]);
@@ -529,6 +534,289 @@ function getuwagir(id) {
     });
 }
 
+function getusers() {
+    const LoginValue = sessionStorage.getItem('Login');
+    const PasswordValue = sessionStorage.getItem("Password");
+    const data = {
+        1: LoginValue,
+        2: PasswordValue
+    };
+
+    fetch(`/api/get-id/other`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(responseData => {
+        console.log("Received data:");
+        if (responseData[1]) {
+            for (const key in responseData) {
+                if (key !== '1') {
+                    const teacher = responseData[key];
+                    const teacherSelect = document.getElementById('to');
+                    if (teacherSelect) {
+                        const option = document.createElement('option');
+                        option.value = teacher.id;
+                        option.textContent = `${teacher.imie} ${teacher.nazwisko}`;
+                        teacherSelect.appendChild(option);
+                    }
+                }
+            }
+        } else {
+            console.error('Brak nauczycieli');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function sendmsg() {
+    const LoginValue = sessionStorage.getItem('Login');
+    const PasswordValue = sessionStorage.getItem("Password");
+    const Title = document.getElementById("title").value;
+    const Description = document.getElementById("description").value;
+    const Attachment = document.getElementById("file").value;
+    const Recv = document.getElementById("to").value;
+    const data = {
+        1: LoginValue,
+        2: PasswordValue,
+        3: Title,
+        4: Description,
+        5: Attachment
+    };
+
+    fetch(`/api/write-message`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(responseData => {
+        console.log("Received data:");
+        console.log(responseData[0]);
+        console.log(responseData[1]);
+        const msgid = responseData[1];
+        const data2 = {
+            1: LoginValue,
+            2: PasswordValue,
+            3: Recv
+        };
+        fetch(`/api/send-message/uczen/${msgid}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data2)
+        })
+        .then(response => response.json())
+        .then(responseData => {
+            console.log("Received data:");
+            console.log(responseData[0]);
+            console.log(responseData[1]);
+            document.location.href="wiadomosci.html";
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function sendmsgr() {
+    const LoginValue = sessionStorage.getItem('Login');
+    const PasswordValue = sessionStorage.getItem("Password");
+    const Title = document.getElementById("title").value;
+    const Description = document.getElementById("description").value;
+    const Attachment = document.getElementById("file").value;
+    const Recv = document.getElementById("to").value;
+    const data = {
+        1: LoginValue,
+        2: PasswordValue,
+        3: Title,
+        4: Description,
+        5: Attachment
+    };
+
+    fetch(`/api/write-message`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(responseData => {
+        console.log("Received data:");
+        console.log(responseData[0]);
+        console.log(responseData[1]);
+        const msgid = responseData[1];
+        const data2 = {
+            1: LoginValue,
+            2: PasswordValue,
+            3: Recv
+        };
+        fetch(`/api/send-message/rodzic/${msgid}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data2)
+        })
+        .then(response => response.json())
+        .then(responseData => {
+            console.log("Received data:");
+            console.log(responseData[0]);
+            console.log(responseData[1]);
+            document.location.href="wiadomoscir.html";
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function getwiadomosciu() {
+    const LoginValue = sessionStorage.getItem('Login');
+    const PasswordValue = sessionStorage.getItem("Password");
+    const data = {
+        1: LoginValue,
+        2: PasswordValue
+    };
+
+    fetch(`/api/get-wiadomosci/uczen`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(responseData => {
+        console.log("Received data:", responseData);
+        const msgContainer = document.getElementById('msg');
+        const detailsContainer = document.getElementById('details');
+        msgContainer.innerHTML = '';
+        detailsContainer.innerHTML = '';
+        if (responseData[1]) {
+            for (let i = 2; responseData[i] !== undefined; i++) {
+                const wiadomosc = responseData[i];
+                let imie = "Nieznany";
+                let nazwisko = "Nadawca";
+                if (wiadomosc.wiadomosc.account.userNauczyciel) {
+                    imie = wiadomosc.wiadomosc.account.userNauczyciel.imie;
+                    nazwisko = wiadomosc.wiadomosc.account.userNauczyciel.nazwisko;
+                } else if (wiadomosc.wiadomosc.account.userUczen) {
+                    imie = wiadomosc.wiadomosc.account.userUczen.imie;
+                    nazwisko = wiadomosc.wiadomosc.account.userUczen.nazwisko;
+                } else if (wiadomosc.wiadomosc.account.userRodzic) {
+                    imie = wiadomosc.wiadomosc.account.userRodzic.imie;
+                    nazwisko = wiadomosc.wiadomosc.account.userRodzic.nazwisko;
+                }
+                const msgTitle = document.createElement('div');
+                msgTitle.classList.add('msg-title');
+                msgTitle.textContent = `${imie} ${nazwisko}: ${wiadomosc.wiadomosc.tytul}`;
+                msgTitle.addEventListener('click', () => {
+                    detailsContainer.innerHTML = '';
+                    const msgContent = document.createElement('p');
+                    msgContent.textContent = `${wiadomosc.wiadomosc.tresc}`;
+                    detailsContainer.appendChild(msgContent);
+                    if (wiadomosc.zalaczniki) {
+                        const attachmentLink = document.createElement('a');
+                        attachmentLink.textContent = "Pobierz załącznik";
+                        attachmentLink.href = `data:application/octet-stream;base64,${wiadomosc.wiadomosc.zalaczniki}`;
+                        attachmentLink.download = "zalacznik";
+                        detailsContainer.appendChild(attachmentLink);
+                    }
+                });
+
+                msgContainer.appendChild(msgTitle);
+            }
+        } else {
+            msgContainer.textContent = 'Brak wiadomości';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function getwiadomoscir() {
+    const LoginValue = sessionStorage.getItem('Login');
+    const PasswordValue = sessionStorage.getItem("Password");
+    const data = {
+        1: LoginValue,
+        2: PasswordValue
+    };
+
+    fetch(`/api/get-wiadomosci/rodzic`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(responseData => {
+        console.log("Received data:", responseData);
+        const msgContainer = document.getElementById('msg');
+        const detailsContainer = document.getElementById('details');
+        msgContainer.innerHTML = '';
+        detailsContainer.innerHTML = '';
+        if (responseData[1]) {
+            for (let i = 2; responseData[i] !== undefined; i++) {
+                const wiadomosc = responseData[i];
+                let imie = "Nieznany";
+                let nazwisko = "Nadawca";
+                if (wiadomosc.wiadomosc.account.userNauczyciel) {
+                    imie = wiadomosc.wiadomosc.account.userNauczyciel.imie;
+                    nazwisko = wiadomosc.wiadomosc.account.userNauczyciel.nazwisko;
+                } else if (wiadomosc.wiadomosc.account.userUczen) {
+                    imie = wiadomosc.wiadomosc.account.userUczen.imie;
+                    nazwisko = wiadomosc.wiadomosc.account.userUczen.nazwisko;
+                } else if (wiadomosc.wiadomosc.account.userRodzic) {
+                    imie = wiadomosc.wiadomosc.account.userRodzic.imie;
+                    nazwisko = wiadomosc.wiadomosc.account.userRodzic.nazwisko;
+                }
+                const msgTitle = document.createElement('div');
+                msgTitle.classList.add('msg-title');
+                msgTitle.textContent = `${imie} ${nazwisko}: ${wiadomosc.wiadomosc.tytul}`;
+                msgTitle.addEventListener('click', () => {
+                    detailsContainer.innerHTML = '';
+                    const msgContent = document.createElement('p');
+                    msgContent.textContent = `${wiadomosc.wiadomosc.tresc}`;
+                    detailsContainer.appendChild(msgContent);
+                    if (wiadomosc.zalaczniki) {
+                        const attachmentLink = document.createElement('a');
+                        attachmentLink.textContent = "Pobierz załącznik";
+                        attachmentLink.href = `data:application/octet-stream;base64,${wiadomosc.wiadomosc.zalaczniki}`;
+                        attachmentLink.download = "zalacznik";
+                        detailsContainer.appendChild(attachmentLink);
+                    }
+                });
+
+                msgContainer.appendChild(msgTitle);
+            }
+        } else {
+            msgContainer.textContent = 'Brak wiadomości';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
 
 const urlParams = new URLSearchParams(window.location.search);
 

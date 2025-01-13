@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wysyłanie wiadomości</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Wysyłanie wiadomości</h1>
+    </header>
+    <main>
+    <form class="upload">
+        <label for="to">Odbiorca:</label>
+        <select id="to" name="to" required>
+            <option value="" disabled selected></option>
+        </select>
+        <label for="title">Tytuł:</label>
+        <input type="text" id="title" name="title"></textarea>
+        <label for="description">Treść wiadomości:</label>
+        <textarea id="description" name="description"></textarea>
+        <label for="file">Załącznik:</label>
+        <input type="file" id="file" name="fileUpload">
+        <button type="button" onclick="sendmsgr()">Wyślij wiadomośc</button>
+        <a href="wiadomoscir.html">
+            <button type="button">Powrót</button>
+        </a>
+    </form>
+    </main>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            getusers();
+        });
+    </script>
+</body>
+</html>

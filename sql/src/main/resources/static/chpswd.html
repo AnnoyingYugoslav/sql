@@ -10,14 +10,16 @@
         <h1>Zmień hasło</h1>
     </header>
     <main>
-    <form id="myForm">
+    <form class="upload">
         <label for="Password">Stare hasło</label>
         <input type="password" id="Password" name="Password" required>
         <label for="Password2">nowe hasło</label>
         <input type="password" id="Password2" name="Password2" required>
         <button type="button" onclick="chpswd()">Zmień hasło</button>
+        <a>
+            <button onclick="returnp()">Powrót</button>
+        </a>
     </form>
-    <button onclick="returnp()">Powrót</button>
     <div id="info">
     </div>
     </main>

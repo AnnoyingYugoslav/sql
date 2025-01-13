@@ -153,6 +153,7 @@ form.upload label {
 
 form.upload input[type="date"],
 form.upload input[type="time"],
+form.upload input[type="password"],
 form.upload textarea {
     width: 96%;
     margin-top: 5px;
@@ -179,10 +180,47 @@ form.upload textarea {
     }
 }
 
+#srodek h1 {
+    text-align: center;
+}
+
 #dzieci {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     gap: 10px; 
+}
+
+#wiadomosci {
+    display: flex; /* Ustawia elementy wewnętrzne w wierszu */
+    height: 600px; /* Wysokość okna przeglądarki */
+}
+
+#msg {
+    flex: 1; /* Lewa kolumna zajmuje 1 jednostkę przestrzeni */
+    background-color: #f4f4f4; /* Jasny kolor tła dla kontrastu */
+    border-right: 1px solid #ccc; /* Linia oddzielająca kolumny */
+    padding: 10px; /* Odstęp wewnętrzny */
+    overflow-y: auto; /* Przewijanie, jeśli wiadomości nie mieszczą się */
+}
+
+#details {
+    flex: 2; /* Prawa kolumna zajmuje więcej przestrzeni niż lewa */
+    background-color: #ffffff; /* Białe tło */
+    padding: 10px; /* Odstęp wewnętrzny */
+    overflow-y: auto; /* Przewijanie w przypadku dużej ilości treści */
+}
+
+/* Wiadomości w kolumnie */
+.msg-title {
+    margin-bottom: 10px; /* Odstęp między wiadomościami */
+    padding: 10px; /* Wewnętrzny odstęp wiadomości */
+    background-color: #e0e0e0; /* Tło wiadomości */
+    border-radius: 4px; /* Zaokrąglone rogi */
+    cursor: pointer; /* Zmienienie kursora na wskaźnik */
+}
+
+.msg-title:hover {
+    background-color: #d0d0d0; /* Zmiana koloru tła przy najechaniu */
 }
