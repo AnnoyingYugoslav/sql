@@ -1330,7 +1330,7 @@ public class ApiController {
 
     //create message
     @PostMapping("/write-message")
-    public String writeMessage(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password 3: tytuł 4: wiadomość 5: godz (format HH:MM) 6: data (format DD.MM.YYYY) 7: załączniki -> 1: true/false 2: id wiadomosci
+    public String writeMessage(@RequestBody Map<Integer, Object> newMapData) { //1: login 2: password 3: tytuł 4: wiadomość 5: załączniki-> 1: true/false 2: id wiadomosci
         Map<Integer, Object> toReturn = new HashMap<>();
         try{
             String login = newMapData.get(1).toString();
@@ -1344,14 +1344,12 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-            DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("HH:mm");
-            LocalDate date = LocalDate.parse(newMapData.get(6).toString(), formatter);
-            LocalTime time = LocalTime.parse(newMapData.get(5).toString(), formatter2);
+            LocalDate date = LocalDate.now();
+            LocalTime time = LocalTime.now();
 
             Godzina godzina = new Godzina(time.getHour(), time.getMinute());
             Dzien dzien = new Dzien(date.getYear(), date.getMonthValue(), date.getDayOfMonth());
-            Wiadomosc wiadomosc = new Wiadomosc(newMapData.get(3).toString(),newMapData.get(4).toString(), godzina, dzien, SerializationUtils.serialize(newMapData.get(7)), account);
+            Wiadomosc wiadomosc = new Wiadomosc(newMapData.get(3).toString(),newMapData.get(4).toString(), godzina, dzien, SerializationUtils.serialize(newMapData.get(5)), account);
             if(!(wiadomosc instanceof Wiadomosc)){
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
