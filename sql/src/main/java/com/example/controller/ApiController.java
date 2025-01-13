@@ -1718,11 +1718,15 @@ public class ApiController {
                 toReturn.put(i,userNauczyciel);
                 i++;
             }
+            toReturn.put(i, null);
+            i++;
             List<UserUczen> allUU = userUczenRepository.findAll();
             for(UserUczen userUczen : allUU){
                 toReturn.put(i,userUczen);
                 i++;
             }
+            toReturn.put(i, null);
+            i++;
             List<UserRodzic> allUR = userRodzicRepository.findAll();
             for(UserRodzic userRodzic : allUR){
                 toReturn.put(i,userRodzic);
