@@ -1,6 +1,6 @@
 html, body {
-    height: 100%; /* Ustawiamy wysokość na 100% wysokości okna */
-    margin: 0;    /* Usuwamy domyślne marginesy */
+    height: 100%;
+    margin: 0;
 }
 
 body {
@@ -46,7 +46,6 @@ button:hover {
     background-color: #0056b3;
 }
 
-/* Login Page Styles */
 #witaj {
     text-align: center;
     margin-top: 50px;
@@ -58,7 +57,7 @@ button:hover {
     margin: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
+    max-width: 1000px;
     margin: 50px auto;
 }
 
@@ -72,8 +71,8 @@ label {
     font-weight: bold;
 }
 a {
-    text-decoration: none; /* Usuwa podkreślenie */
-    color: inherit; /* Używa koloru tekstu rodzica */
+    text-decoration: none;
+    color: inherit;
 }
 input[type="text"],
 input[type="password"],
@@ -154,6 +153,7 @@ form.upload label {
 form.upload input[type="date"],
 form.upload input[type="time"],
 form.upload input[type="password"],
+form.upload input[type="text"],
 form.upload textarea {
     width: 96%;
     margin-top: 5px;
@@ -193,34 +193,33 @@ form.upload textarea {
 }
 
 #wiadomosci {
-    display: flex; /* Ustawia elementy wewnętrzne w wierszu */
-    height: 600px; /* Wysokość okna przeglądarki */
+    display: flex;
+    height: 600px;
 }
 
 #msg {
-    flex: 1; /* Lewa kolumna zajmuje 1 jednostkę przestrzeni */
-    background-color: #f4f4f4; /* Jasny kolor tła dla kontrastu */
-    border-right: 1px solid #ccc; /* Linia oddzielająca kolumny */
-    padding: 10px; /* Odstęp wewnętrzny */
-    overflow-y: auto; /* Przewijanie, jeśli wiadomości nie mieszczą się */
+    flex: 1;
+    background-color: #f4f4f4;
+    border-right: 1px solid #ccc;
+    padding: 10px;
+    overflow-y: auto;
 }
 
 #details {
-    flex: 2; /* Prawa kolumna zajmuje więcej przestrzeni niż lewa */
-    background-color: #ffffff; /* Białe tło */
-    padding: 10px; /* Odstęp wewnętrzny */
-    overflow-y: auto; /* Przewijanie w przypadku dużej ilości treści */
+    flex: 2;
+    background-color: #ffffff;
+    padding: 10px;
+    overflow-y: auto;
 }
 
-/* Wiadomości w kolumnie */
 .msg-title {
-    margin-bottom: 10px; /* Odstęp między wiadomościami */
-    padding: 10px; /* Wewnętrzny odstęp wiadomości */
-    background-color: #e0e0e0; /* Tło wiadomości */
-    border-radius: 4px; /* Zaokrąglone rogi */
-    cursor: pointer; /* Zmienienie kursora na wskaźnik */
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 .msg-title:hover {
-    background-color: #d0d0d0; /* Zmiana koloru tła przy najechaniu */
+    background-color: #d0d0d0;
 }

@@ -6,9 +6,9 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
+    <div id="witaj">
         <h1>Dodaj ocenę</h1>
-    </header>
+    </div>
     <main>
     <form class="upload">
         <label for="subject">Przedmiot:</label>
@@ -35,7 +35,7 @@
         </select>
         <br>
         <label for="description">Opis:</label>
-        <textarea id="description" name="description"></textarea>
+        <input type="text" id="description" name="description"></input>
         <button type="button" onclick="addocena()">Dodaj ocenę</button>
         <a href="uczenlookup.html">
             <button type="button">Powrót</button>

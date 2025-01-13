@@ -1398,11 +1398,11 @@ public class ApiController {
                 toReturn.put(1, false);
                 return convertMapToJson(toReturn);
             }
-            Long i = Long.parseLong(newMapData.get(4).toString());
+            int i = Integer.parseInt(newMapData.get(4).toString());
             Long idUser = Long.parseLong(newMapData.get(3).toString());
             User user;
             switch(i){
-                case 1L:
+                case 1:
                     user = userRodzicRepository.getReferenceById(idUser);
                     if(!(user instanceof UserRodzic)){
                         toReturn.put(1, false);
@@ -1415,7 +1415,7 @@ public class ApiController {
                         return convertMapToJson(toReturn);
                     }
                     break;
-                case 2L:
+                case 2:
                     user = userUczenRepository.getReferenceById(idUser);
                     if(!(user instanceof UserUczen)){
                         toReturn.put(1, false);
@@ -1428,7 +1428,7 @@ public class ApiController {
                         return convertMapToJson(toReturn);
                     }
                     break;
-                case 3L:
+                case 3:
                     user = userNauczycielRepository.getReferenceById(idUser);
                         if(!(user instanceof UserNauczyciel)){
                             toReturn.put(1, false);
@@ -1451,6 +1451,7 @@ public class ApiController {
 
         }
         catch(Throwable e){
+            System.err.println(e);
             toReturn.put(1, false);
             return convertMapToJson(toReturn);
         }

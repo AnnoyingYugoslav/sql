@@ -6,9 +6,9 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
+    <div id="witaj">
         <h1>Wysyłanie wiadomości</h1>
-    </header>
+    </div>
     <main>
     <form class="upload">
         <label for="to">Odbiorca:</label>
@@ -19,8 +19,6 @@
         <input type="text" id="title" name="title"></textarea>
         <label for="description">Treść wiadomości:</label>
         <textarea id="description" name="description"></textarea>
-        <label for="file">Załącznik:</label>
-        <input type="file" id="file" name="fileUpload">
         <button type="button" onclick="sendmsgr()">Wyślij wiadomośc</button>
         <a href="wiadomoscir.html">
             <button type="button">Powrót</button>

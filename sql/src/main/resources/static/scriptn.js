@@ -618,6 +618,10 @@ function removesprawdzian() {
     });
 }
 
+
+let nauczyciele = [];
+let uczniowie = [];
+let rodzice = [];
 function getusersn() {
     const LoginValue = sessionStorage.getItem('Login');
     const PasswordValue = sessionStorage.getItem("Password");
@@ -635,29 +639,67 @@ function getusersn() {
     })
     .then(response => response.json())
     .then(responseData => {
-        console.log("Received data:");
-        console.log(responseData[0]);
-        console.log(responseData[1]);
-        if (responseData[1]) {
-            for (const key in responseData) {
-                if (key !== '1') {
-                    const teacher = responseData[key];
-                    const teacherSelect = document.getElementById('to');
-                    if (teacherSelect) {
-                        const option = document.createElement('option');
-                        option.value = teacher.id;
-                        option.textContent = `${teacher.imie} ${teacher.nazwisko}`;
-                        teacherSelect.appendChild(option);
-                    }
-                }
+        let nullCount = 0;
+        for (let i = 2; responseData[i] !== undefined; i++) {
+            const user = responseData[i];
+            if (user === null) {
+                nullCount++;
+                continue;
             }
-        } else {
-            console.error('Brak nauczycieli');
+            if (nullCount === 0) {
+                nauczyciele.push({ id: user.id, imie: user.imie, nazwisko: user.nazwisko });
+            }
+            else if (nullCount === 1) {
+                uczniowie.push({ id: user.id, imie: user.imie, nazwisko: user.nazwisko });
+            }
+            else if (nullCount === 2) {
+                rodzice.push({ id: user.id, imie: user.imie, nazwisko: user.nazwisko });
+            }
         }
+        const userTypeSelect = document.getElementById('userType');
+        userTypeSelect.addEventListener('change', function() {
+            const selectedUserType = userTypeSelect.value;
+            populateUserList(selectedUserType);
+        });
+        populateUserList('3');
     })
     .catch(error => {
         console.error('Error:', error);
     });
+}
+
+function populateUserList(userType) {
+    const userSelect = document.getElementById('to');
+    userSelect.innerHTML = '';
+
+    const label = document.createElement('option');
+    label.value = '';
+    label.disabled = true;
+    label.selected = true;
+    label.textContent = `Wybierz ${getUserTypeName(userType)}...`;
+    userSelect.appendChild(label);
+
+    let userList = [];
+    if (userType === '3') {
+        userList = nauczyciele;
+    } else if (userType === '1') {
+        userList = rodzice;
+    } else if (userType === '2') {
+        userList = uczniowie;
+    }
+
+    userList.forEach(user => {
+        const option = document.createElement('option');
+        option.value = user.id;
+        option.textContent = `${user.imie} ${user.nazwisko}`;
+        userSelect.appendChild(option);
+    });
+}
+function getUserTypeName(userType) {
+    if (userType === '3') return 'nauczyciela';
+    if (userType === '1') return 'rodzica';
+    if (userType === '2') return 'ucznia';
+    return '';
 }
 
 function sendmsgn() {
@@ -665,8 +707,9 @@ function sendmsgn() {
     const PasswordValue = sessionStorage.getItem("Password");
     const Title = document.getElementById("title").value;
     const Description = document.getElementById("description").value;
-    const Attachment = document.getElementById("file").value;
+    const Attachment = 0;
     const Recv = document.getElementById("to").value;
+    const Type = document.getElementById("userType").value;
     const data = {
         1: LoginValue,
         2: PasswordValue,
@@ -694,6 +737,7 @@ function sendmsgn() {
             3: Recv,
             4: Type
         };
+        console.log(data2);
         fetch(`/api/send-message/nauczyciel/${msgid}`, {
             method: 'POST',
             headers: {
@@ -704,9 +748,8 @@ function sendmsgn() {
         .then(response => response.json())
         .then(responseData => {
             console.log("Received data:");
-            console.log(responseData[0]);
             console.log(responseData[1]);
-            //document.location.href="wiadomoscin.html";
+            document.location.href="wiadomoscin.html";
         })
         .catch(error => {
             console.error('Error:', error);
@@ -760,6 +803,11 @@ function getwiadomoscin() {
                 msgTitle.textContent = `${imie} ${nazwisko}: ${wiadomosc.wiadomosc.tytul}`;
                 msgTitle.addEventListener('click', () => {
                     detailsContainer.innerHTML = '';
+                    const msgDate = document.createElement('p');
+                    const Minutes = wiadomosc.wiadomosc.godz.h.toString().padStart(2, '0');
+                    const Hours = wiadomosc.wiadomosc.godz.m.toString().padStart(2, '0');
+                    msgDate.textContent = `${wiadomosc.wiadomosc.dzien.dzien}-${wiadomosc.wiadomosc.dzien.miesiac}-${wiadomosc.wiadomosc.dzien.rok} ${Minutes}:${Hours}`;
+                    detailsContainer.appendChild(msgDate);
                     const msgContent = document.createElement('p');
                     msgContent.textContent = `${wiadomosc.wiadomosc.tresc}`;
                     detailsContainer.appendChild(msgContent);

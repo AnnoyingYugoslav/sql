@@ -579,7 +579,7 @@ function sendmsg() {
     const PasswordValue = sessionStorage.getItem("Password");
     const Title = document.getElementById("title").value;
     const Description = document.getElementById("description").value;
-    const Attachment = document.getElementById("file").value;
+    const Attachment = 0;
     const Recv = document.getElementById("to").value;
     const data = {
         1: LoginValue,
@@ -636,7 +636,7 @@ function sendmsgr() {
     const PasswordValue = sessionStorage.getItem("Password");
     const Title = document.getElementById("title").value;
     const Description = document.getElementById("description").value;
-    const Attachment = document.getElementById("file").value;
+    const Attachment = 0;
     const Recv = document.getElementById("to").value;
     const data = {
         1: LoginValue,
@@ -730,6 +730,11 @@ function getwiadomosciu() {
                 msgTitle.textContent = `${imie} ${nazwisko}: ${wiadomosc.wiadomosc.tytul}`;
                 msgTitle.addEventListener('click', () => {
                     detailsContainer.innerHTML = '';
+                    const msgDate = document.createElement('p');
+                    const Minutes = wiadomosc.wiadomosc.godz.h.toString().padStart(2, '0');
+                    const Hours = wiadomosc.wiadomosc.godz.m.toString().padStart(2, '0');
+                    msgDate.textContent = `${wiadomosc.wiadomosc.dzien.dzien}-${wiadomosc.wiadomosc.dzien.miesiac}-${wiadomosc.wiadomosc.dzien.rok} ${Minutes}:${Hours}`;
+                    detailsContainer.appendChild(msgDate);
                     const msgContent = document.createElement('p');
                     msgContent.textContent = `${wiadomosc.wiadomosc.tresc}`;
                     detailsContainer.appendChild(msgContent);
@@ -795,6 +800,11 @@ function getwiadomoscir() {
                 msgTitle.textContent = `${imie} ${nazwisko}: ${wiadomosc.wiadomosc.tytul}`;
                 msgTitle.addEventListener('click', () => {
                     detailsContainer.innerHTML = '';
+                    const msgDate = document.createElement('p');
+                    const Minutes = wiadomosc.wiadomosc.godz.h.toString().padStart(2, '0');
+                    const Hours = wiadomosc.wiadomosc.godz.m.toString().padStart(2, '0');
+                    msgDate.textContent = `${wiadomosc.wiadomosc.dzien.dzien}-${wiadomosc.wiadomosc.dzien.miesiac}-${wiadomosc.wiadomosc.dzien.rok} ${Minutes}:${Hours}`;
+                    detailsContainer.appendChild(msgDate);
                     const msgContent = document.createElement('p');
                     msgContent.textContent = `${wiadomosc.wiadomosc.tresc}`;
                     detailsContainer.appendChild(msgContent);
