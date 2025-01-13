@@ -1693,5 +1693,80 @@ public class ApiController {
             return convertMapToJson(toReturn);
         }
     }
+
+    @PostMapping("/get-id/nauczyciel") //dostaje nauczycieli, uczniow i rodzicow - tylko dla nauczycieli
+    public String getAllId(@RequestBody Map<Integer, Object> newMapData) {
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){ //is an account
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(account.getUserNauczyciel() == null){ //not a nauczyciel
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            toReturn.put(1, true);
+            List<UserNauczyciel> allUN = userNauczycielRepository.findAll();
+            int i = 2;
+            for(UserNauczyciel userNauczyciel : allUN){
+                toReturn.put(i,userNauczyciel);
+                i++;
+            }
+            List<UserUczen> allUU = userUczenRepository.findAll();
+            for(UserUczen userUczen : allUU){
+                toReturn.put(i,userUczen);
+                i++;
+            }
+            List<UserRodzic> allUR = userRodzicRepository.findAll();
+            for(UserRodzic userRodzic : allUR){
+                toReturn.put(i,userRodzic);
+                i++;
+            }
+            return convertMapToJson(toReturn);
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+    @PostMapping("/get-id/other") //dostaje nauczycieli
+    public String getNauId(@RequestBody Map<Integer, Object> newMapData) {
+        Map<Integer, Object> toReturn = new HashMap<>();
+        try{
+            String login = newMapData.get(1).toString();
+            String password = newMapData.get(2).toString();
+            Account account = accountRepository.findIdByLogin(login);
+            if(!(account instanceof Account)){
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            if(!account.checkUserAccount(login, password)){ //is an account
+                toReturn.put(1, false);
+                return convertMapToJson(toReturn);
+            }
+            toReturn.put(1, true);
+            List<UserNauczyciel> allUN = userNauczycielRepository.findAll();
+            int i = 2;
+            for(UserNauczyciel userNauczyciel : allUN){
+                toReturn.put(i,userNauczyciel);
+                i++;
+            }
+            return convertMapToJson(toReturn);
+        }
+        catch(Throwable e){
+            toReturn.put(1, false);
+            return convertMapToJson(toReturn);
+        }
+    }
+
+
 }   
 
