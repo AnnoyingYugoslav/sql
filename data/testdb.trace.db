@@ -2797,3 +2797,17 @@ The object is already closed [90007-214]
 2025-01-13 18:13:30 jdbc[4]: exception
 org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
 The object is already closed [90007-214]
+2025-01-14 12:46:48 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
+The object is already closed [90007-214]
+2025-01-14 12:46:48 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
+The object is already closed [90007-214]
+2025-01-14 12:49:09 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "SCRIPT TO 'ścieżka_do_pliku.sql' [*]NO_DATA"
+Syntax error in SQL statement "SCRIPT TO 'ścieżka_do_pliku.sql' [*]NO_DATA"; SQL statement:
+SCRIPT TO 'ścieżka_do_pliku.sql' NO_DATA [42000-214]
+2025-01-14 12:49:20 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "SCRIPT TO 'baza.sql' [*]NO_DATA"
+Syntax error in SQL statement "SCRIPT TO 'baza.sql' [*]NO_DATA"; SQL statement:
+SCRIPT TO 'baza.sql' NO_DATA [42000-214]
